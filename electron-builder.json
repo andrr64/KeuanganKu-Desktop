@@ -1,0 +1,20 @@
+{
+  "appId": "com.andreas.keuanganku",
+  "files": ["dist-react", "dist-electron"],
+  "icon": "desktop.png",
+  "win": {
+    "target": [
+      "portable", "msi"
+    ]
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ]
+  },
+  "mac": {
+    "target": [
+      "dmg"
+    ]
+  }
+}
