@@ -3,18 +3,12 @@
   "files": ["dist-react", "dist-electron"],
   "icon": "desktop.png",
   "win": {
-    "target": [
-      "portable", "msi"
-    ]
+    "target": ["msi"]
   },
   "linux": {
-    "target": [
-      "AppImage"
-    ]
+    "target": ["AppImage"]
   },
   "mac": {
-    "target": [
-      "dmg"
-    ]
+    "target": ["dmg"]
   }
 }
