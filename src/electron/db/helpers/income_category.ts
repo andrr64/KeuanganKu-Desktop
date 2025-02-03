@@ -1,7 +1,15 @@
 import IncomeCategory from "../models/income_category.js";
 
 // Create a new income category
-export const createIncomeCategory = async (name: string, description?: string) => {
+/**
+ * Creates a new income category in the database.
+ *
+ * @param {string} name - The name of the income category.
+ * @param {string} [description] - An optional description of the income category.
+ * @returns {Promise<IncomeCategory>} A promise that resolves to the created income category.
+ * @throws {Error} If there is an error creating the income category.
+ */
+export const createIncomeCategory = async (name: string, description?: string): Promise<IncomeCategory> => {
     try {
         const incomeCategory = await IncomeCategory.create({ 
             name, 
@@ -16,7 +24,14 @@ export const createIncomeCategory = async (name: string, description?: string) =
 };
 
 // Read an income category by ID
-export const getIncomeCategoryById = async (id: number) => {
+/**
+ * Retrieves an income category by its ID.
+ *
+ * @param {number} id - The ID of the income category to retrieve.
+ * @returns {Promise<IncomeCategory>} A promise that resolves to the income category if found.
+ * @throws {Error} Throws an error if the income category is not found or if there is an issue fetching the income category.
+ */
+export const getIncomeCategoryById = async (id: number): Promise<IncomeCategory> => {
     try {
         const incomeCategory = await IncomeCategory.findByPk(id);
         if (!incomeCategory) {
@@ -29,7 +44,16 @@ export const getIncomeCategoryById = async (id: number) => {
 };
 
 // Update an income category by ID
-export const updateIncomeCategory = async (id: number, name: string, description?: string) => {
+/**
+ * Updates an existing income category with the provided name and optional description.
+ *
+ * @param {number} id - The ID of the income category to update.
+ * @param {string} name - The new name for the income category.
+ * @param {string} [description] - The new description for the income category (optional).
+ * @returns {Promise<IncomeCategory>} The updated income category.
+ * @throws {Error} If the income category is not found or if there is an error during the update process.
+ */
+export const updateIncomeCategory = async (id: number, name: string, description?: string): Promise<IncomeCategory> => {
     try {
         const incomeCategory = await IncomeCategory.findByPk(id);
         if (!incomeCategory) {
@@ -45,7 +69,14 @@ export const updateIncomeCategory = async (id: number, name: string, description
 };
 
 // Delete an income category by ID
-export const deleteIncomeCategory = async (id: number) => {
+/**
+ * Deletes an income category by its ID.
+ *
+ * @param {number} id - The ID of the income category to delete.
+ * @returns {Promise<boolean>} - A promise that resolves to true if the income category was successfully deleted.
+ * @throws {Error} - Throws an error if the income category is not found or if there is an issue deleting it.
+ */
+export const deleteIncomeCategory = async (id: number): Promise<boolean> => {
     try {
         const incomeCategory = await IncomeCategory.findByPk(id);
         if (!incomeCategory) {
@@ -59,7 +90,22 @@ export const deleteIncomeCategory = async (id: number) => {
 };
 
 // Initialize data with 3 basic income categories
-export const initIncomeCategories = async () => {
+/**
+ * Initializes the income categories by creating predefined categories.
+ * 
+ * This function creates the following income categories:
+ * - Salary: Monthly salary
+ * - Freelance: Freelance work income
+ * - Investments: Income from investments
+ * 
+ * For each category, it calls the `createIncomeCategory` function with the category's name and description.
+ * If an error occurs during the creation of a category, it logs an error message to the console.
+ * 
+ * @async
+ * @function
+ * @returns {Promise<void>} A promise that resolves when all categories have been initialized.
+ */
+export const initIncomeCategories = async (): Promise<void> => {
     const categories = [
         { name: 'Salary', description: 'Monthly salary' },
         { name: 'Freelance', description: 'Freelance work income' },
