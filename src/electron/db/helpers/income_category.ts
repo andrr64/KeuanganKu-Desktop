@@ -31,15 +31,33 @@ export const createIncomeCategory = async (name: string, description?: string): 
  * @returns {Promise<IncomeCategory>} A promise that resolves to the income category if found.
  * @throws {Error} Throws an error if the income category is not found or if there is an issue fetching the income category.
  */
-export const getIncomeCategoryById = async (id: number): Promise<IncomeCategory> => {
+export const getIncomeCategoryById = async (id: number): Promise<{}> => {
     try {
         const incomeCategory = await IncomeCategory.findByPk(id);
         if (!incomeCategory) {
             throw new Error('Income category not found');
         }
-        return incomeCategory;
+        let incomeCategoryData = incomeCategory.toJSON();
+        return incomeCategoryData;
     } catch (error: any) {
         throw new Error(`Error fetching income category: ${error.message}`);
+    }
+};
+
+// Get all income categories
+/**
+ * Retrieves all income categories from the database.
+ *
+ * @returns {Promise<IncomeCategory[]>} A promise that resolves to an array of income categories.
+ * @throws {Error} If there is an error fetching the income categories.
+ */
+export const getIncomeCategories = async (): Promise<{}[]> => {
+    try {
+        const incomeCategories = await IncomeCategory.findAll();
+        const jsonIncomeCategories = incomeCategories.map((category) => category.toJSON());
+        return jsonIncomeCategories;
+    } catch (error: any) {
+        throw new Error(`Error fetching income categories: ${error.message}`);
     }
 };
 

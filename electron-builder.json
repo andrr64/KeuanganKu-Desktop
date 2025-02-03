@@ -1,6 +1,7 @@
 {
   "appId": "com.andreas.keuanganku",
   "files": ["dist-react", "dist-electron"],
+  "extraResources": ["dist-electron/preload.cjs"],
   "icon": "desktop.png",
   "win": {
     "target": ["msi"]

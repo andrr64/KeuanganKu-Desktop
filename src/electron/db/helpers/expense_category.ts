@@ -31,15 +31,32 @@ export const createExpenseCategory = async (name: string, description?: string) 
  * @returns {Promise<ExpenseCategory>} A promise that resolves to the expense category if found.
  * @throws {Error} If the expense category is not found or if there is an error during retrieval.
  */
-export const getExpenseCategoryById = async (id: number): Promise<ExpenseCategory> => {
+export const getExpenseCategoryById = async (id: number): Promise<{}> => {
     try {
         const expenseCategory = await ExpenseCategory.findByPk(id);
         if (!expenseCategory) {
             throw new Error('Expense category not found');
         }
-        return expenseCategory;
+        return expenseCategory.toJSON();
     } catch (error: any) {
         throw new Error(`Error fetching expense category: ${error.message}`);
+    }
+};
+
+
+// Read all expense categories
+/**
+ * Retrieves all expense categories.
+ *
+ * @returns {Promise<{}[]>} A promise that resolves to an array of expense categories.
+ * @throws {Error} If there is an error during retrieval.
+ */
+export const getExpenseCategories = async (): Promise<{}[]> => {
+    try {
+        const expenseCategories = await ExpenseCategory.findAll();
+        return expenseCategories.map(category => category.toJSON());
+    } catch (error: any) {
+        throw new Error(`Error fetching expense categories: ${error.message}`);
     }
 };
 
