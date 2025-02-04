@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
-import { getIncomeCategories } from "./helpers/income_category.js";
-import { addIncome, getAllIncomes } from "./helpers/income.js";
+import { getIncomeCategories } from "../db/helpers/income_category.js";
+import { addIncome, getAllIncomes } from "../db/helpers/income.js";
 
 const ipcIncomeDBEventsKeys = {
     "getIncomeCategories": "get-income-categories",

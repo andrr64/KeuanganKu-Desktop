@@ -18,10 +18,10 @@
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": true, 
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "electron.d.ts", "data_interfaces"],
+  "include": ["src"],
   "exclude": ["src/electron"]
 }

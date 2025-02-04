@@ -1,8 +1,6 @@
 import { IncomeInterface } from "./src/ui/interfaces/income";
 import { IncomeCategoryInterface } from "./src/ui/interfaces/income_category";
 
-export {}
-
 declare global {
     interface Window {
         db_income_categories: {
@@ -11,5 +9,10 @@ declare global {
         db_incomes: {
             getIncomes: (callbackWhenError: (err: any) => void) => Promise<IncomeInterface[]>;
         };
+        app_sys: {
+            quitApp: () => Promise<void>;
+        };
     }
 }
+
+export {}; // Penting agar ini dianggap sebagai modul dan tidak menimpa deklarasi global

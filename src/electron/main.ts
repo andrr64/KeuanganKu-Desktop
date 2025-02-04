@@ -1,11 +1,12 @@
 import { initializeDatabase } from './db/sequelize.js';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import { isDev } from './util.js';
 import * as path from 'path';
 import { initIncomeCategories } from './db/helpers/income_category.js';
 import { getPreloadPath } from './getPath.js';
 import { initExpenseCategories } from './db/helpers/expense_category.js';
 import { registerDbIncomeIPChandlers } from './db/electron_db.js';
+import { registerAppSystemIPCHandlers } from './ipc_handlers/app_sys.js';
 
 
 const createWindow = (): void => {
@@ -28,10 +29,10 @@ app.whenReady().then(async () => {
         await initializeDatabase();
         await initIncomeCategories();
         await initExpenseCategories();
-        
-        // IPC Register
-        registerDbIncomeIPChandlers();
 
+        registerAppSystemIPCHandlers();
+        registerDbIncomeIPChandlers();
+        
         createWindow();
     } catch (err: any) {
         console.error('Gagal membuka database:', err.message);
