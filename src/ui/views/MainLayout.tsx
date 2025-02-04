@@ -16,7 +16,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useAlert } from './alert/AlertContext';
-import IncomeForm from './forms/IncomeForms';
 import Homepage from './main-contents/Home';
 import WalletPage from './main-contents/Wallet';
 
@@ -80,14 +79,6 @@ function MainLayout() {
             },
             icon: <AccountBalanceWalletIcon color='inherit' />,
             content: <WalletPage />
-        },
-        {
-            name: "Income Form",
-            onClick: (index: number) => {
-                handleListItemClick(index);
-            },
-            icon: <AccountBalanceWalletIcon color='inherit' />,
-            content: <IncomeForm />
         },
         {
             name: "Exit",

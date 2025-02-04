@@ -1,20 +1,25 @@
 import React, { useEffect } from 'react';
-import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, IconButton } from '@mui/material';
 import { IncomeCategoryInterface } from '../../interfaces/income_category';
 import LoadingModal from '../modals/LoadingModal';
 import { useAlert } from '../alert/AlertContext';
+import { Close } from '@mui/icons-material';
 
-interface IncomeFormProps {
+interface ExpenseFormProps {
     title: string;
     description: string;
     amount: number;
     category_id: number;
 }
 
-const IncomeForm: React.FC = () => {
+interface ExpenseFormUIProps{
+    whenIconCloseFire: () => void;
+}
+
+const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
     const [loading, setLoading] = React.useState(true);
     const { showAlert } = useAlert();
-    const [formData, setFormData] = React.useState<IncomeFormProps>({
+    const [formData, setFormData] = React.useState<ExpenseFormProps>({
         title: '',
         description: '',
         amount: 0,
@@ -38,11 +43,16 @@ const IncomeForm: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (formData.amount > 1_000_000_000_000) {
+            showAlert("error", "Amount cannot exceed 1 trillion");
+            return;
+        }
         // Handle form submission logic here
         console.log(formData);
     };
 
     const initData = async () => {
+        //@ts-ignore
         const data = await window.db_income_categories.getIncomeCategories();
         setCategories((prevCategories) => [...prevCategories, ...data]);
         setLoading(false);
@@ -63,12 +73,22 @@ const IncomeForm: React.FC = () => {
                     flexDirection: 'column',
                     gap: 2,
                     mt: 3,
+                    p: 4,
                     mx: 'auto',
-                    width: '50%',
+                    borderRadius: 2,
                     backgroundColor: 'white',
-                    minWidth: 300,
+                    maxWidth: 560,
+                    minWidth: 400,
                 }}
             >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography variant="h5" align="center">
+                        Add Expense
+                    </Typography>
+                    <IconButton onClick={(_) => whenIconCloseFire()}>
+                        <Close/>
+                    </IconButton>
+                </Box>
                 <TextField
                     label="Title"
                     name="title"
@@ -95,13 +115,14 @@ const IncomeForm: React.FC = () => {
                     required
                     fullWidth
                 />
-                <FormControl fullWidth>
-                    <InputLabel>Category</InputLabel>
+                <FormControl fullWidth required>
+                    <InputLabel id="category-label">Category</InputLabel>
                     <Select
+                        labelId="category-label"
                         name="category_id"
                         value={formData.category_id}
                         onChange={handleChange}
-                        required
+                        label="Category"
                     >
                         {categories.map((cat) => (
                             <MenuItem key={cat.id} value={cat.id}>
@@ -118,4 +139,4 @@ const IncomeForm: React.FC = () => {
     );
 };
 
-export default IncomeForm;
+export default ExpenseForm;
