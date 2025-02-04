@@ -1,18 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../sequelize.js';
+import { ExpenseInterface } from '../interfaces/expense.js';
 
-export interface ExpenseAttributes {
-    id?: number;
-    title: string;
-    description?: string;
-    amount: number;
-    category_id: number;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-// Model untuk Expense
-class Expense extends Model<ExpenseAttributes> implements ExpenseAttributes {
+class ExpenseModel extends Model<ExpenseInterface> implements ExpenseInterface {
     public id?: number;
     public title!: string;
     public description?: string;
@@ -22,7 +12,7 @@ class Expense extends Model<ExpenseAttributes> implements ExpenseAttributes {
     public updatedAt!: Date;
 }
 
-Expense.init(
+ExpenseModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -66,4 +56,4 @@ Expense.init(
     }
 );
 
-export default Expense;
+export default ExpenseModel;

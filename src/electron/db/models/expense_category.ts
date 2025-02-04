@@ -1,16 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../sequelize.js';
-
-export interface ExpenseCategoryAttributes {
-    id?: number;
-    name: string;
-    description?: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
+import { ExpenseCategoryInterface } from '../interfaces/expense_category.js';
 
 // Model for ExpenseCategory
-class ExpenseCategory extends Model<ExpenseCategoryAttributes> implements ExpenseCategoryAttributes {
+class ExpenseCategoryModel extends Model<ExpenseCategoryInterface> implements ExpenseCategoryInterface {
     public id?: number;
     public name!: string;
     public description?: string;
@@ -18,7 +11,7 @@ class ExpenseCategory extends Model<ExpenseCategoryAttributes> implements Expens
     public updatedAt!: Date;
 }
 
-ExpenseCategory.init(
+ExpenseCategoryModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -50,4 +43,4 @@ ExpenseCategory.init(
     }
 );
 
-export default ExpenseCategory;
+export default ExpenseCategoryModel;

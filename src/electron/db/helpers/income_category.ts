@@ -1,4 +1,4 @@
-import IncomeCategory from "../models/income_category.js";
+import IncomeCategoryModel from "../models/income_category.js";
 
 // Create a new income category
 /**
@@ -6,12 +6,12 @@ import IncomeCategory from "../models/income_category.js";
  *
  * @param {string} name - The name of the income category.
  * @param {string} [description] - An optional description of the income category.
- * @returns {Promise<IncomeCategory>} A promise that resolves to the created income category.
+ * @returns {Promise<IncomeCategoryModel>} A promise that resolves to the created income category.
  * @throws {Error} If there is an error creating the income category.
  */
-export const createIncomeCategory = async (name: string, description?: string): Promise<IncomeCategory> => {
+export const createIncomeCategory = async (name: string, description?: string): Promise<IncomeCategoryModel> => {
     try {
-        const incomeCategory = await IncomeCategory.create({ 
+        const incomeCategory = await IncomeCategoryModel.create({ 
             name, 
             description, 
             createdAt: new Date(), 
@@ -28,12 +28,12 @@ export const createIncomeCategory = async (name: string, description?: string): 
  * Retrieves an income category by its ID.
  *
  * @param {number} id - The ID of the income category to retrieve.
- * @returns {Promise<IncomeCategory>} A promise that resolves to the income category if found.
+ * @returns {Promise<IncomeCategoryModel>} A promise that resolves to the income category if found.
  * @throws {Error} Throws an error if the income category is not found or if there is an issue fetching the income category.
  */
 export const getIncomeCategoryById = async (id: number): Promise<{}> => {
     try {
-        const incomeCategory = await IncomeCategory.findByPk(id);
+        const incomeCategory = await IncomeCategoryModel.findByPk(id);
         if (!incomeCategory) {
             throw new Error('Income category not found');
         }
@@ -48,12 +48,12 @@ export const getIncomeCategoryById = async (id: number): Promise<{}> => {
 /**
  * Retrieves all income categories from the database.
  *
- * @returns {Promise<IncomeCategory[]>} A promise that resolves to an array of income categories.
+ * @returns {Promise<IncomeCategoryModel[]>} A promise that resolves to an array of income categories.
  * @throws {Error} If there is an error fetching the income categories.
  */
 export const getIncomeCategories = async (): Promise<{}[]> => {
     try {
-        const incomeCategories = await IncomeCategory.findAll();
+        const incomeCategories = await IncomeCategoryModel.findAll();
         const jsonIncomeCategories = incomeCategories.map((category) => category.toJSON());
         return jsonIncomeCategories;
     } catch (error: any) {
@@ -68,12 +68,12 @@ export const getIncomeCategories = async (): Promise<{}[]> => {
  * @param {number} id - The ID of the income category to update.
  * @param {string} name - The new name for the income category.
  * @param {string} [description] - The new description for the income category (optional).
- * @returns {Promise<IncomeCategory>} The updated income category.
+ * @returns {Promise<IncomeCategoryModel>} The updated income category.
  * @throws {Error} If the income category is not found or if there is an error during the update process.
  */
-export const updateIncomeCategory = async (id: number, name: string, description?: string): Promise<IncomeCategory> => {
+export const updateIncomeCategory = async (id: number, name: string, description?: string): Promise<IncomeCategoryModel> => {
     try {
-        const incomeCategory = await IncomeCategory.findByPk(id);
+        const incomeCategory = await IncomeCategoryModel.findByPk(id);
         if (!incomeCategory) {
             throw new Error('Income category not found');
         }
@@ -96,7 +96,7 @@ export const updateIncomeCategory = async (id: number, name: string, description
  */
 export const deleteIncomeCategory = async (id: number): Promise<boolean> => {
     try {
-        const incomeCategory = await IncomeCategory.findByPk(id);
+        const incomeCategory = await IncomeCategoryModel.findByPk(id);
         if (!incomeCategory) {
             throw new Error('Income category not found');
         }

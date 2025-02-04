@@ -1,4 +1,4 @@
-import ExpenseCategory from "../models/expense_category.js";
+import ExpenseCategoryModel from "../models/expense_category.js";
 
 // Create a new expense category
 /**
@@ -11,7 +11,7 @@ import ExpenseCategory from "../models/expense_category.js";
  */
 export const createExpenseCategory = async (name: string, description?: string) => {
     try {
-        const expenseCategory = await ExpenseCategory.create({ 
+        const expenseCategory = await ExpenseCategoryModel.create({ 
             name, 
             description, 
             createdAt: new Date(), 
@@ -28,12 +28,12 @@ export const createExpenseCategory = async (name: string, description?: string) 
  * Retrieves an expense category by its ID.
  *
  * @param {number} id - The ID of the expense category to retrieve.
- * @returns {Promise<ExpenseCategory>} A promise that resolves to the expense category if found.
+ * @returns {Promise<ExpenseCategoryModel>} A promise that resolves to the expense category if found.
  * @throws {Error} If the expense category is not found or if there is an error during retrieval.
  */
 export const getExpenseCategoryById = async (id: number): Promise<{}> => {
     try {
-        const expenseCategory = await ExpenseCategory.findByPk(id);
+        const expenseCategory = await ExpenseCategoryModel.findByPk(id);
         if (!expenseCategory) {
             throw new Error('Expense category not found');
         }
@@ -53,7 +53,7 @@ export const getExpenseCategoryById = async (id: number): Promise<{}> => {
  */
 export const getExpenseCategories = async (): Promise<{}[]> => {
     try {
-        const expenseCategories = await ExpenseCategory.findAll();
+        const expenseCategories = await ExpenseCategoryModel.findAll();
         return expenseCategories.map(category => category.toJSON());
     } catch (error: any) {
         throw new Error(`Error fetching expense categories: ${error.message}`);
@@ -67,12 +67,12 @@ export const getExpenseCategories = async (): Promise<{}[]> => {
  * @param {number} id - The ID of the expense category to update.
  * @param {string} name - The new name for the expense category.
  * @param {string} [description] - The new description for the expense category (optional).
- * @returns {Promise<ExpenseCategory>} The updated expense category.
+ * @returns {Promise<ExpenseCategoryModel>} The updated expense category.
  * @throws {Error} If the expense category is not found or if there is an error during the update process.
  */
-export const updateExpenseCategory = async (id: number, name: string, description?: string): Promise<ExpenseCategory> => {
+export const updateExpenseCategory = async (id: number, name: string, description?: string): Promise<ExpenseCategoryModel> => {
     try {
-        const expenseCategory = await ExpenseCategory.findByPk(id);
+        const expenseCategory = await ExpenseCategoryModel.findByPk(id);
         if (!expenseCategory) {
             throw new Error('Expense category not found');
         }
@@ -95,7 +95,7 @@ export const updateExpenseCategory = async (id: number, name: string, descriptio
  */
 export const deleteExpenseCategory = async (id: number): Promise<boolean> => {
     try {
-        const expenseCategory = await ExpenseCategory.findByPk(id);
+        const expenseCategory = await ExpenseCategoryModel.findByPk(id);
         if (!expenseCategory) {
             throw new Error('Expense category not found');
         }

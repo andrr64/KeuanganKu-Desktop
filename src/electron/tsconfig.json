@@ -5,5 +5,8 @@
         "module": "NodeNext",
         "strict": true,
         "skipLibCheck": true,
+    },
+    "paths": {
+      "@data_interfaces/*": ["data_interfaces/*"]
     }
 }

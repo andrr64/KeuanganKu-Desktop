@@ -1,4 +1,4 @@
-import Expense from "../models/expense.js";
+import ExpenseModel from "../models/expense.js";
 
 // Create a new expense
 /**
@@ -8,12 +8,12 @@ import Expense from "../models/expense.js";
  * @param {number} amount - The amount of the expense.
  * @param {number} category_id - The ID of the category to which the expense belongs.
  * @param {string} [description] - An optional description of the expense.
- * @returns {Promise<Expense>} The created expense record.
+ * @returns {Promise<ExpenseModel>} The created expense record.
  * @throws {Error} If there is an error creating the expense.
  */
 export const createExpense = async (title: string, amount: number, category_id: number, description?: string) => {
     try {
-        const expense = await Expense.create({ 
+        const expense = await ExpenseModel.create({ 
             title, 
             amount, 
             category_id, 
@@ -32,12 +32,12 @@ export const createExpense = async (title: string, amount: number, category_id: 
  * Retrieves an expense by its ID.
  *
  * @param {number} id - The ID of the expense to retrieve.
- * @returns {Promise<Expense>} A promise that resolves to the expense object if found.
+ * @returns {Promise<ExpenseModel>} A promise that resolves to the expense object if found.
  * @throws {Error} If the expense is not found or if there is an error during the fetch operation.
  */
 export const getExpenseById = async (id: number) => {
     try {
-        const expense = await Expense.findByPk(id);
+        const expense = await ExpenseModel.findByPk(id);
         if (!expense) {
             throw new Error('Expense not found');
         }
@@ -56,12 +56,12 @@ export const getExpenseById = async (id: number) => {
  * @param {number} amount - The new amount of the expense.
  * @param {number} category_id - The new category ID of the expense.
  * @param {string} [description] - The new description of the expense (optional).
- * @returns {Promise<Expense>} The updated expense object.
+ * @returns {Promise<ExpenseModel>} The updated expense object.
  * @throws {Error} If the expense is not found or there is an error during the update.
  */
 export const updateExpense = async (id: number, title: string, amount: number, category_id: number, description?: string) => {
     try {
-        const expense = await Expense.findByPk(id);
+        const expense = await ExpenseModel.findByPk(id);
         if (!expense) {
             throw new Error('Expense not found');
         }
@@ -89,7 +89,7 @@ export const updateExpense = async (id: number, title: string, amount: number, c
  */
 export const deleteExpense = async (id: number) => {
     try {
-        const expense = await Expense.findByPk(id);
+        const expense = await ExpenseModel.findByPk(id);
         if (!expense) {
             throw new Error('Expense not found');
         }

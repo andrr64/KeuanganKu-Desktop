@@ -1,15 +1,16 @@
-import Income, { IncomeAttributes } from "../models/income.js";
+import { IncomeInterface } from "../interfaces/income.js";
+import IncomeModel from "../models/income.js";
 
 /**
  * Adds a new income record to the database.
  *
- * @param {IncomeAttributes} incomeData - The data of the income to be added.
- * @returns {Promise<Income>} The created income record.
+ * @param {IncomeInterface} incomeData - The data of the income to be added.
+ * @returns {Promise<IncomeModel>} The created income record.
  * @throws {Error} If there is an error while adding the income.
  */
-export const addIncome = async (incomeData: IncomeAttributes): Promise<Income> => {
+export const addIncome = async (incomeData: IncomeInterface): Promise<IncomeModel> => {
     try {
-        const income = await Income.create(incomeData);
+        const income = await IncomeModel.create(incomeData);
         return income;
     } catch (error: any) {
         throw new Error('Error adding income: ' + error.message);
@@ -19,12 +20,12 @@ export const addIncome = async (incomeData: IncomeAttributes): Promise<Income> =
 /**
  * Retrieves all income records from the database.
  *
- * @returns {Promise<Income[]>} A promise that resolves to an array of income records.
+ * @returns {Promise<IncomeModel[]>} A promise that resolves to an array of income records.
  * @throws {Error} If there is an error fetching the income records.
  */
-export const getAllIncomes = async (): Promise<Income[]> => {
+export const getAllIncomes = async (): Promise<IncomeModel[]> => {
     try {
-        const incomes = await Income.findAll();
+        const incomes = await IncomeModel.findAll();
         return incomes;
     } catch (error: any) {
         throw new Error('Error fetching incomes: ' + error.message);
@@ -35,12 +36,12 @@ export const getAllIncomes = async (): Promise<Income[]> => {
  * Retrieves an income record by its ID.
  *
  * @param {number} id - The ID of the income record to retrieve.
- * @returns {Promise<Income>} A promise that resolves to the income record if found.
+ * @returns {Promise<IncomeModel>} A promise that resolves to the income record if found.
  * @throws {Error} Throws an error if the income record is not found or if there is an issue fetching the income.
  */
-export const getIncomeById = async (id: number): Promise<Income> => {
+export const getIncomeById = async (id: number): Promise<IncomeModel> => {
     try {
-        const income = await Income.findByPk(id);
+        const income = await IncomeModel.findByPk(id);
         if (!income) {
             throw new Error('Income not found');
         }
@@ -54,13 +55,13 @@ export const getIncomeById = async (id: number): Promise<Income> => {
  * Updates an income record by its ID.
  *
  * @param {number} id - The ID of the income record to update.
- * @param {IncomeAttributes} updateData - The data to update the income record with.
- * @returns {Promise<Income>} The updated income record.
+ * @param {IncomeInterface} updateData - The data to update the income record with.
+ * @returns {Promise<IncomeModel>} The updated income record.
  * @throws {Error} If the income record is not found or if there is an error during the update.
  */
-export const updateIncomeById = async (id: number, updateData: IncomeAttributes): Promise<Income> => {
+export const updateIncomeById = async (id: number, updateData: IncomeInterface): Promise<IncomeModel> => {
     try {
-        const income = await Income.findByPk(id);
+        const income = await IncomeModel.findByPk(id);
         if (!income) {
             throw new Error('Income not found');
         }
@@ -80,7 +81,7 @@ export const updateIncomeById = async (id: number, updateData: IncomeAttributes)
  */
 export const deleteIncome = async (id: number): Promise<{ message: string; }> => {
     try {
-        const income = await Income.findByPk(id);
+        const income = await IncomeModel.findByPk(id);
         if (!income) {
             throw new Error('Income not found');
         }

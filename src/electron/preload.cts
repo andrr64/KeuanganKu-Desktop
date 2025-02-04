@@ -1,25 +1,19 @@
 import electron from 'electron';
 
-electron.contextBridge.exposeInMainWorld('electron', {
-    getStaticData: () => {
-        console.log('Getting static data');
-        return "Static data";
-    },
-    subscribeStatistics: (callback: any) => {
-        electron.ipcRenderer.on('statistics-data', (_event, data) => {
-            callback(data);
-        });
-    },
-});
+const ipcIncomeDBEventsKeys = {
+    "getIncomeCategories": "get-income-categories",
+    "getIncomes": "get-incomes",
+    "addIncome": "add-income"
+} 
 
-electron.contextBridge.exposeInMainWorld('database_income_categories', {
+electron.contextBridge.exposeInMainWorld('db_income_categories', {
     getIncomeCategories: () => {
-        return electron.ipcRenderer.invoke('get-income-categories');
+        return electron.ipcRenderer.invoke(ipcIncomeDBEventsKeys.getIncomeCategories);
     },
 });
 
-electron.contextBridge.exposeInMainWorld('database_income', {
+electron.contextBridge.exposeInMainWorld('db_incomes', {
     getIncomes: (callbackWhenError: (err: any) => void) => {
-        return electron.ipcRenderer.invoke('get-incomes', callbackWhenError);
+        return electron.ipcRenderer.invoke(ipcIncomeDBEventsKeys.getIncomes, callbackWhenError);
     }
 });

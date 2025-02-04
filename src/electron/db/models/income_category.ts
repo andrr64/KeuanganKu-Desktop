@@ -1,16 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../sequelize.js';
+import { IncomeCategoryInterface } from '../interfaces/income_category.js';
 
-export interface IncomeCategoryAttributes {
-    id?: number;
-    name: string;
-    description?: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-// Model untuk IncomeCategory
-class IncomeCategory extends Model<IncomeCategoryAttributes> implements IncomeCategoryAttributes {
+class IncomeCategoryModel extends Model<IncomeCategoryInterface> implements IncomeCategoryInterface {
     public id?: number;
     public name!: string;
     public description?: string;
@@ -18,7 +10,7 @@ class IncomeCategory extends Model<IncomeCategoryAttributes> implements IncomeCa
     public updatedAt!: Date;
 }
 
-IncomeCategory.init(
+IncomeCategoryModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -50,4 +42,4 @@ IncomeCategory.init(
     }
 );
 
-export default IncomeCategory;
+export default IncomeCategoryModel;

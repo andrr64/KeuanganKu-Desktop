@@ -1,12 +1,7 @@
-import { useEffect } from "react";
-import IncomeForm from "./views/income_form";
+import MainLayout from "./views/MainLayout";
 
 export default function App() {
-  useEffect(() => {
-
-  }, []);
-
   return (
-    <IncomeForm/>
+    <MainLayout/>
   );
 }
