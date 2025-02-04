@@ -6,7 +6,7 @@
     "main": "dist-electron/main.js",
     "scripts": {
         "dev": "npm run clean:db && npm-run-all --parallel dev:react dev:electron",
-        "clean:db": "del /f /q keuanganku.db",
+        "clean:db": "rm -rf keuanganku.db",
         "dev:react": "vite",
         "dev:electron": "npm run transpile:electron && cross-env NODE_ENV=development electron .",
         "transpile:electron": "tsc --project src/electron/tsconfig.json",
