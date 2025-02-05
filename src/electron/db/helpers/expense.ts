@@ -11,11 +11,12 @@ import ExpenseModel from "../models/expense.js";
  * @returns {Promise<ExpenseModel>} The created expense record.
  * @throws {Error} If there is an error creating the expense.
  */
-export const createExpense = async (title: string, amount: number, category_id: number, description?: string) => {
+export const createExpense = async (title: string, amount: number, category_id: number, wallet_id: number, description?: string) => {
     try {
         const expense = await ExpenseModel.create({ 
             title, 
-            amount, 
+            amount,
+            wallet_id, 
             category_id, 
             description, 
             createdAt: new Date(), 

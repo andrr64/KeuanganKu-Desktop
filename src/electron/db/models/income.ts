@@ -9,6 +9,7 @@ class IncomeModel extends Model<IncomeInterface> implements IncomeInterface {
     public description?: string;
     public amount!: number;
     public category_id!: number;
+    public wallet_id!: number;
     public createdAt!: Date;
     public updatedAt!: Date;
 }
@@ -38,6 +39,14 @@ IncomeModel.init(
             references: {
                 model: 'income_categories', // refers to table name
                 key: 'id', // refers to column name in income_categories table
+            },
+        },
+        wallet_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'wallets', // refers to table name
+                key: 'id', // refers to column name in wallets table
             },
         },
         createdAt: {
