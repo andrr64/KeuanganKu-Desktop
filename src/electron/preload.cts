@@ -1,7 +1,7 @@
 import electron from 'electron';
 
 const database = {
-    wallet: 'db_wallet',
+    wallet: 'db_wallets',
     income_categories: 'db_income_categories',
     expense_categories: 'db_expense_categories'
 }

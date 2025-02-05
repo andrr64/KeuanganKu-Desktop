@@ -1,15 +1,16 @@
 import { IncomeInterface } from "./ui/interfaces/income";
 import { WalletInterface } from "./ui/interfaces/wallet";
 import { IncomeCategoryInterface } from "./ui/interfaces/income_category";
+import { ExpenseCategoryInterface } from "./ui/interfaces/expense_category";
 import { IPCResponse } from "./ui/interfaces/ipc_response";
 
 declare global {
     interface Window {
+        db_expense_categories: {
+            getExpenseCategories: () => Promise<ExpenseCategoryInterface[]>;
+        };
         db_income_categories: {
             getIncomeCategories: () => Promise<IncomeCategoryInterface[]>;
-        };
-        db_incomes: {
-            getIncomes: (callbackWhenError: (err: any) => void) => Promise<IncomeInterface[]>;
         };
         db_wallets: {
             addWallet: (title: string) => Promise<IPCResponse>;
