@@ -8,6 +8,7 @@ class ExpenseModel extends Model<ExpenseInterface> implements ExpenseInterface {
     public description?: string;
     public amount!: number;
     public category_id!: number;
+    public wallet_id!: number;
     public createdAt!: Date;
     public updatedAt!: Date;
 }
@@ -38,6 +39,14 @@ ExpenseModel.init(
                 model: 'expense_categories', // refers to table name
                 key: 'id', // refers to column name in expense_categories table
             }
+        },
+        wallet_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'wallets', // refers to table name
+                key: 'id', // refers to column name in wallets table
+            },
         },
         createdAt: {
             type: DataTypes.DATE,
