@@ -4,6 +4,7 @@ import { Close } from '@mui/icons-material';
 import { IncomeCategoryInterface } from '../../interfaces/income_category';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
+import { IPCResponse } from '../../interfaces/ipc_response';
 
 interface IncomeFormProps {
     title: string;
@@ -25,10 +26,7 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
         amount: 0,
         category_id: -1,
     });
-    const [categories, setCategories] = React.useState<IncomeCategoryInterface[]>([
-        { id: -1, name: 'Choose', createdAt: new Date(), updatedAt: new Date() },
-    ]);
-
+    const [categories, setCategories] = React.useState<IncomeCategoryInterface[]>([]);
     const handleChange = (e: any | { name?: string; value: unknown }) => {
         const { name, value } = e.target;
         if (name == 'category_id' && value == -1) {
@@ -47,14 +45,13 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
             showAlert("error", "Amount cannot exceed 1 trillion");
             return;
         }
-        // Handle form submission logic here
         console.log(formData);
     };
 
     const initData = async () => {
-        const data: IncomeCategoryInterface[] = await window.db_income_categories.getIncomeCategories();
-        formData.category_id = data[0].id?? 0;
-        setCategories(data);
+        const data: IPCResponse<IncomeCategoryInterface[]> = await window.db_income_categories.getIncomeCategories();
+        formData.category_id = data.data[0].id?? 0;
+        setCategories(data.data);
         setLoading(false);
     };
 

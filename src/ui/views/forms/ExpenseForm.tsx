@@ -3,7 +3,8 @@ import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typo
 import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
-import { IncomeCategoryInterface } from '../../interfaces/income_category';
+import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
+import { IPCResponse } from '../../interfaces/ipc_response';
 
 
 interface ExpenseFormProps {
@@ -26,9 +27,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
         amount: 0,
         category_id: -1,
     });
-    const [categories, setCategories] = React.useState<IncomeCategoryInterface[]>([
-        { id: -1, name: 'Choose', createdAt: new Date(), updatedAt: new Date() },
-    ]);
+    const [categories, setCategories] = React.useState<ExpenseCategoryInterface[]>([]);
 
     const handleChange = (e: any | { name?: string; value: unknown }) => {
         const { name, value } = e.target;
@@ -53,10 +52,9 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
     };
 
     const initData = async () => {
-        //@ts-ignore
-        const data = await window.db_expense_categories.getExpenseCategories();
-        setCategories(data);
-        formData.category_id = data[0].id?? 0;
+        const response = await window.db_expense_categories.getExpenseCategories();
+        formData.category_id = response.data[0].id?? 0;
+        setCategories(response.data);
         setLoading(false);
     };
 

@@ -7,13 +7,13 @@ import { IPCResponse } from "./ui/interfaces/ipc_response";
 declare global {
     interface Window {
         db_expense_categories: {
-            getExpenseCategories: () => Promise<ExpenseCategoryInterface[]>;
+            getExpenseCategories: () => Promise<IPCResponse<ExpenseCategoryInterface[]>>;
         };
         db_income_categories: {
-            getIncomeCategories: () => Promise<IncomeCategoryInterface[]>;
+            getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>;
         };
         db_wallets: {
-            addWallet: (title: string) => Promise<IPCResponse>;
+            addWallet: (title: string) => Promise<IPCResponse<WalletInterface>>;
         };
         app_sys: {
             quitApp: () => Promise<void>;
