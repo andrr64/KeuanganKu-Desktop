@@ -4,8 +4,6 @@ import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
-import { IPCResponse } from '../../interfaces/ipc_response';
-
 
 interface ExpenseFormProps {
     title: string;

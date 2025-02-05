@@ -4,8 +4,6 @@ import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { waitMs } from '../../util';
-import { IPCResponse } from '../../interfaces/ipc_response';
-import { WalletInterface } from '../../interfaces/wallet';
 
 interface WalletFormProps {
     title: string;
@@ -38,10 +36,10 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
         }
         setLoading(true);
         await waitMs(200);
-        const response: IPCResponse<WalletInterface> = await window.db_wallets.addWallet(formData.title);
+        const response = await window.db_wallets.addWallet(formData.title);
         setLoading(false);
         if (response.status) {
-            const newWallet = response.data;
+            const newWallet = response.data; ///TODO: handle new wallet
             showAlert("success", "Wallet has been successfully added");
             whenIconCloseFire();
         } else {
