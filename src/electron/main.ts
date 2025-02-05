@@ -5,7 +5,7 @@ import * as path from 'path';
 import { initIncomeCategories } from './db/helpers/income_category.js';
 import { getPreloadPath } from './getPath.js';
 import { initExpenseCategories } from './db/helpers/expense_category.js';
-import { registerDbExpenseIPCHandlers, registerDbIncomeIPChandlers } from './db/electron_db.js';
+import { registerDbExpenseIPCHandlers, registerDbIncomeIPChandlers, registerDbWalletIPCHandlers } from './db/electron_db.js';
 import { registerAppSystemIPCHandlers } from './ipc_handlers/app_sys.js';
 
 
@@ -34,7 +34,8 @@ app.whenReady().then(async () => {
         registerAppSystemIPCHandlers();
         registerDbIncomeIPChandlers();
         registerDbExpenseIPCHandlers();
-        
+        registerDbWalletIPCHandlers();
+
         createWindow();
     } catch (err: any) {
         console.error('Gagal membuka database:', err.message);
