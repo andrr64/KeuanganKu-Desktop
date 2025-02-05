@@ -13,7 +13,7 @@ const ModalContainer: React.FC<ModalContainerProps> = ({ open, children }) => {
                 backdrop: {
                     transitionDuration: 300,
                     sx: {
-                        backdropFilter: 'blur(5px)',
+                        backdropFilter: 'blur(3px)',
                         backgroundColor: 'rgba(0, 0, 0, 0.5)'
                     }
                 },

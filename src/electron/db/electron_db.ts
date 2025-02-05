@@ -1,11 +1,16 @@
 import { ipcMain } from "electron";
 import { getIncomeCategories } from "./helpers/income_category.js";
 import { addIncome, getAllIncomes } from "./helpers/income.js";
+import { getExpenseCategoriesJSON } from "./helpers/expense_category.js";
 
 const ipcIncomeDBEventsKeys = {
     "getIncomeCategories": "get-income-categories",
     "getIncomes": "get-incomes",
     "addIncome": "add-income"
+}
+
+const ipcExpenseDBEventKeys = {
+    "getExpenseCategories": "get-expense-categories",
 }
 
 export function registerDbIncomeIPChandlers() {
@@ -35,4 +40,15 @@ export function registerDbIncomeIPChandlers() {
             return false;
         }
     });
+}
+
+export function registerDbExpenseIPCHandlers() {
+    ipcMain.handle(ipcExpenseDBEventKeys.getExpenseCategories, async(_, errorCallBack: (err: any) => void) => {
+        try {
+            const data = await getExpenseCategoriesJSON();
+            return data;
+        } catch (error) {
+            errorCallBack(error);
+        }
+    })
 }

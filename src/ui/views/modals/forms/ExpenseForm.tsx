@@ -53,8 +53,9 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
 
     const initData = async () => {
         //@ts-ignore
-        const data = await window.db_income_categories.getIncomeCategories();
-        setCategories((prevCategories) => [...prevCategories, ...data]);
+        const data = await window.db_expense_categories.getExpenseCategories();
+        setCategories(data);
+        formData.category_id = data[0].id?? 0;
         setLoading(false);
     };
 
@@ -75,18 +76,27 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
                     mt: 3,
                     p: 4,
                     mx: 'auto',
-                    borderRadius: 2,
+                    borderRadius: 4,
                     backgroundColor: 'white',
                     maxWidth: 560,
                     minWidth: 400,
                 }}
             >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="h5" align="center">
-                        Add Expense
-                    </Typography>
+                <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'start',
+                }}>
+                    <Box>
+                        <Typography variant="h5">
+                            Add Expense
+                        </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                            Please fill out the form below to add a new expense entry
+                        </Typography>
+                    </Box>
                     <IconButton onClick={(_) => whenIconCloseFire()}>
-                        <Close/>
+                        <Close />
                     </IconButton>
                 </Box>
                 <TextField

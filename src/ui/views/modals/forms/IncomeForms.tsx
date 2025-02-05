@@ -12,11 +12,11 @@ interface IncomeFormProps {
     category_id: number;
 }
 
-interface IncomeFormUIProps{
+interface IncomeFormUIProps {
     whenIconCloseFire: () => void;
 }
 
-const IncomeForm: React.FC<IncomeFormUIProps> = ({whenIconCloseFire}) => {
+const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
     const [loading, setLoading] = React.useState(true);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<IncomeFormProps>({
@@ -53,7 +53,8 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({whenIconCloseFire}) => {
 
     const initData = async () => {
         //@ts-ignore
-        const data = await window.db_income_categories.getIncomeCategories();
+        const data: IncomeCategoryInterface[] = await window.db_income_categories.getIncomeCategories();
+        formData.category_id = data[0].id?? 0;
         setCategories(data);
         setLoading(false);
     };
@@ -75,18 +76,27 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({whenIconCloseFire}) => {
                     mt: 3,
                     p: 4,
                     mx: 'auto',
-                    borderRadius: 2,
+                    borderRadius: 4,
                     backgroundColor: 'white',
                     maxWidth: 560,
                     minWidth: 400,
                 }}
             >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="h5" align="center">
-                        Add Income
-                    </Typography>
+                <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'start',
+                }}>
+                    <Box>
+                        <Typography variant="h5">
+                            Add Income
+                        </Typography>
+                        <Typography variant="subtitle1" color="textSecondary">
+                            Please fill out the form below to add a new income entry
+                        </Typography>
+                    </Box>
                     <IconButton onClick={(_) => whenIconCloseFire()}>
-                        <Close/>
+                        <Close />
                     </IconButton>
                 </Box>
                 <TextField
@@ -132,7 +142,7 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({whenIconCloseFire}) => {
                     </Select>
                 </FormControl>
                 <Button type="submit" variant="contained" color="primary" fullWidth>
-                    Submit
+                    Add
                 </Button>
             </Box>
         </>

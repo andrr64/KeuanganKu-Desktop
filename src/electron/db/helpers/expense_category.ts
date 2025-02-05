@@ -51,7 +51,7 @@ export const getExpenseCategoryById = async (id: number): Promise<{}> => {
  * @returns {Promise<{}[]>} A promise that resolves to an array of expense categories.
  * @throws {Error} If there is an error during retrieval.
  */
-export const getExpenseCategories = async (): Promise<{}[]> => {
+export const getExpenseCategoriesJSON = async (): Promise<{}[]> => {
     try {
         const expenseCategories = await ExpenseCategoryModel.findAll();
         return expenseCategories.map(category => category.toJSON());

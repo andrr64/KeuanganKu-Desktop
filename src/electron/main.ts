@@ -5,18 +5,19 @@ import * as path from 'path';
 import { initIncomeCategories } from './db/helpers/income_category.js';
 import { getPreloadPath } from './getPath.js';
 import { initExpenseCategories } from './db/helpers/expense_category.js';
-import { registerDbIncomeIPChandlers } from './db/electron_db.js';
+import { registerDbExpenseIPCHandlers, registerDbIncomeIPChandlers } from './db/electron_db.js';
 import { registerAppSystemIPCHandlers } from './ipc_handlers/app_sys.js';
 
 
 const createWindow = (): void => {
     const mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        minWidth: 1000,
+        minHeight: 680,
         webPreferences: {
             preload: getPreloadPath()
         }
     });
+    mainWindow.maximize(); // Add this line to maximize the window
     if (isDev()) {
         mainWindow.loadURL('http://localhost:8000');
     } else {
@@ -32,6 +33,7 @@ app.whenReady().then(async () => {
 
         registerAppSystemIPCHandlers();
         registerDbIncomeIPChandlers();
+        registerDbExpenseIPCHandlers();
         
         createWindow();
     } catch (err: any) {
