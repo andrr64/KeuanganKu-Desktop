@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import LoadingModal from '../LoadingModal';
-import { useAlert } from '../../alert/AlertContext';
-import { IncomeCategoryInterface } from '../../../interfaces/income_category';
+import { IncomeCategoryInterface } from '../../interfaces/income_category';
+import { useAlert } from '../alert/AlertContext';
+import LoadingModal from '../modals/LoadingModal';
 
 interface IncomeFormProps {
     title: string;

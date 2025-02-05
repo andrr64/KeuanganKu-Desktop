@@ -1,8 +1,8 @@
 import React from 'react';
 import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import LoadingModal from '../LoadingModal';
-import { useAlert } from '../../alert/AlertContext';
+import { useAlert } from '../alert/AlertContext';
+import LoadingModal from '../modals/LoadingModal';
 
 interface WalletFormProps {
     title: string;
