@@ -33,6 +33,7 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
             showAlert("warning", "Title cannot be empty");
             return;
         }
+        window.db_wallets.addWallet({id: -1, title: formData.title});
     };
 
     return (

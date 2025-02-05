@@ -52,7 +52,6 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
     };
 
     const initData = async () => {
-        //@ts-ignore
         const data: IncomeCategoryInterface[] = await window.db_income_categories.getIncomeCategories();
         formData.category_id = data[0].id?? 0;
         setCategories(data);

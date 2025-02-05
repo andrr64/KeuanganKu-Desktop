@@ -10,26 +10,10 @@ const ipcExpenseDBEventKeys = {
     "getExpenseCategories": "get-expense-categories",
 }
 
-const ipcWalletEventKeys = {
-    "getWallets": "get-wallets",
-    "addWallet": "add-wallet",
-    "deleteWallet": "delete-wallet",
-    "updateWallet": "update-wallet"
-}
-
 electron.contextBridge.exposeInMainWorld('db_wallets', {
-    getWallets: () => {
-        return electron.ipcRenderer.invoke(ipcWalletEventKeys.getWallets);
-    },
     addWallet: (wallet: any) => {
-        return electron.ipcRenderer.invoke(ipcWalletEventKeys.addWallet, wallet);
+        return electron.ipcRenderer.invoke("add-wallet", wallet);
     },
-    deleteWallet: (walletId: string) => {
-        return electron.ipcRenderer.invoke(ipcWalletEventKeys.deleteWallet, walletId);
-    },
-    updateWallet: (wallet: any) => {
-        return electron.ipcRenderer.invoke(ipcWalletEventKeys.updateWallet, wallet);
-    }
 });
 
 electron.contextBridge.exposeInMainWorld('db_income_categories', {

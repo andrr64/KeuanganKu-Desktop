@@ -3,6 +3,7 @@ import { getIncomeCategories } from "./helpers/income_category.js";
 import { addIncome, getAllIncomes } from "./helpers/income.js";
 import { getExpenseCategoriesJSON } from "./helpers/expense_category.js";
 import { readWalletById, readWallets, addWallet, deleteWallet, updateWallet } from "./helpers/wallet.js";
+import { WalletInterface } from "./interfaces/wallet.js";
 
 const ipcIncomeDBEventsKeys = {
     "getIncomeCategories": "get-income-categories",
@@ -63,36 +64,9 @@ export function registerDbExpenseIPCHandlers() {
 }
 
 export function registerDbWalletIPCHandlers() {
-    ipcMain.handle(ipcWalletEventKeys.getWallets, async (_, errorCallback: (err: any) => void) => {
-        try {
-            const wallets = await readWallets();
-            return wallets;
-        } catch (error) {
-            errorCallback(error);
-        }
-    });
-
-    ipcMain.handle(ipcWalletEventKeys.addWallet, async (_, data) => {
+    ipcMain.handle("add-wallet", async (_, data: WalletInterface) => {
         try {
             await addWallet(data);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    });
-
-    ipcMain.handle(ipcWalletEventKeys.deleteWallet, async (_, data) => {
-        try {
-            await deleteWallet(data);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    });
-
-    ipcMain.handle(ipcWalletEventKeys.updateWallet, async (_, data) => {
-        try {
-            await updateWallet(data.id, data);
             return true;
         } catch (error) {
             return false;

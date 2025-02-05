@@ -1,6 +1,6 @@
-import { IncomeInterface } from "./src/ui/interfaces/income";
-import { WalletInterface } from "./src/ui/interfaces/wallet";
-import { IncomeCategoryInterface } from "./src/ui/interfaces/income_category";
+import { IncomeInterface } from "./ui/interfaces/income";
+import { WalletInterface } from "./ui/interfaces/wallet";
+import { IncomeCategoryInterface } from "./ui/interfaces/income_category";
 
 declare global {
     interface Window {
@@ -11,10 +11,9 @@ declare global {
             getIncomes: (callbackWhenError: (err: any) => void) => Promise<IncomeInterface[]>;
         };
         db_wallets: {
-            getWallets: () => Promise<any>;
-            addWallet: (wallet: any) => Promise<WalletInterface>;
-            deleteWallet: (walletId: string) => Promise<WalletInterface>;
-            updateWallet: (wallet: any) => Promise<WalletInterface>;
+            getWallets: () => Promise<WalletInterface[]>;
+            addWallet: (wallet: WalletInterface) => Promise<WalletInterface>;
+            updateWallet: (wallet: WalletInterface) => Promise<WalletInterface>;
         };
         app_sys: {
             quitApp: () => Promise<void>;
