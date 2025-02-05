@@ -3,7 +3,9 @@ import { WalletInterface } from '../interfaces/wallet.js';
 
 // Add a new wallet
 export const addWallet = async (wallet: WalletInterface): Promise<WalletInterface> => {
-    const newWallet = await WalletModel.create(wallet);
+    const newWallet = await WalletModel.create({
+        title: wallet.title
+    });
     return newWallet.toJSON();
 };
 

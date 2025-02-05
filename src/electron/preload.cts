@@ -1,37 +1,27 @@
 import electron from 'electron';
 
-const ipcIncomeDBEventsKeys = {
-    "getIncomeCategories": "get-income-categories",
-    "getIncomes": "get-incomes",
-    "addIncome": "add-income"
+const database = {
+    wallet: 'db_wallet',
+    income_categories: 'db_income_categories',
+    expense_categories: 'db_expense_categories'
 }
 
-const ipcExpenseDBEventKeys = {
-    "getExpenseCategories": "get-expense-categories",
-}
-
-electron.contextBridge.exposeInMainWorld('db_wallets', {
-    addWallet: (wallet: any) => {
-        return electron.ipcRenderer.invoke("add-wallet", wallet);
+electron.contextBridge.exposeInMainWorld(database.wallet, {
+    addWallet: (title: string) => {
+        return electron.ipcRenderer.invoke("add-wallet", title);
     },
 });
 
-electron.contextBridge.exposeInMainWorld('db_income_categories', {
+electron.contextBridge.exposeInMainWorld(database.income_categories, {
     getIncomeCategories: () => {
-        return electron.ipcRenderer.invoke(ipcIncomeDBEventsKeys.getIncomeCategories);
+        return electron.ipcRenderer.invoke("get-income-categories");
     },
 });
 
-electron.contextBridge.exposeInMainWorld('db_expense_categories', {
+electron.contextBridge.exposeInMainWorld(database.expense_categories, {
     getExpenseCategories: () => {
-        return electron.ipcRenderer.invoke(ipcExpenseDBEventKeys.getExpenseCategories);
+        return electron.ipcRenderer.invoke("get-expense-categories");
     },
-});
-
-electron.contextBridge.exposeInMainWorld('db_incomes', {
-    getIncomes: (callbackWhenError: (err: any) => void) => {
-        return electron.ipcRenderer.invoke(ipcIncomeDBEventsKeys.getIncomes, callbackWhenError);
-    }
 });
 
 electron.contextBridge.exposeInMainWorld('app_sys', {

@@ -3,6 +3,9 @@ import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
+import { waitMs } from '../../util';
+import { IPCResponse } from '../../interfaces/ipc_response';
+import { WalletInterface } from '../../interfaces/wallet';
 
 interface WalletFormProps {
     title: string;
@@ -27,13 +30,23 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (formData.title.trim() === '') {
             showAlert("warning", "Title cannot be empty");
             return;
         }
-        window.db_wallets.addWallet({id: -1, title: formData.title});
+        setLoading(true);
+        await waitMs(200);
+        const response: IPCResponse<WalletInterface> = await window.db_wallets.addWallet(formData.title);
+        setLoading(false);
+        if (response.status) {
+            const newWallet = response.data;
+            showAlert("success", "Wallet has been successfully added");
+            whenIconCloseFire();
+        } else {
+            showAlert("error", response.message);
+        }
     };
 
     return (
