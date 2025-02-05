@@ -1,4 +1,5 @@
 import { IncomeInterface } from "./src/ui/interfaces/income";
+import { WalletInterface } from "./src/ui/interfaces/wallet";
 import { IncomeCategoryInterface } from "./src/ui/interfaces/income_category";
 
 declare global {
@@ -9,8 +10,15 @@ declare global {
         db_incomes: {
             getIncomes: (callbackWhenError: (err: any) => void) => Promise<IncomeInterface[]>;
         };
+        db_wallets: {
+            getWallets: () => Promise<any>;
+            addWallet: (wallet: any) => Promise<WalletInterface>;
+            deleteWallet: (walletId: string) => Promise<WalletInterface>;
+            updateWallet: (wallet: any) => Promise<WalletInterface>;
+        };
         app_sys: {
             quitApp: () => Promise<void>;
+            newWindow: (url: string) => Promise<void>;
         };
     }
 }
