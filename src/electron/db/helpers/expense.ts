@@ -8,6 +8,7 @@ import ExpenseModel from "../models/expense.js";
  * @param {string} title - The title of the expense.
  * @param {number} amount - The amount of the expense.
  * @param {number} category_id - The ID of the category to which the expense belongs.
+ * @param {number} wallet_id - The ID of the wallet to which the expense belongs.
  * @param {string} [description] - An optional description of the expense.
  * @returns {Promise<ExpenseModel>} The created expense record.
  * @throws {Error} If there is an error creating the expense.

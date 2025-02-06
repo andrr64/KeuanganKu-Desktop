@@ -4,8 +4,8 @@ import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
-import { waitMs } from '../../util';
 import { WalletInterface } from '../../interfaces/wallet';
+import { waitMs } from '../../util';
 
 interface ExpenseFormProps {
     title: string;
@@ -58,8 +58,13 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
             return;
         } 
         setLoading(true);
-        ///TODO: handle submit logic here
-        await waitMs(250);
+        waitMs(200);
+        const response = await window.db_expenses.addExpense(formData);
+        if (response.status) {
+            showAlert("success", "Expense added successfully");
+        } else {
+            showAlert("error", "Failed to add expense");
+        }
         setLoading(false);
         console.log(formData);
     };

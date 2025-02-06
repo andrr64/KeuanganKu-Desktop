@@ -8,6 +8,8 @@ import { addIncome } from "./helpers/income.js";
 import { IncomeInterface } from "./interfaces/income.js";
 import { ExpenseCategoryInterface } from "./interfaces/expense_category.js";
 import { IncomeCategoryInterface } from "./interfaces/income_category.js";
+import { createExpense } from "./helpers/expense.js";
+import { ExpenseInterface } from "./interfaces/expense.js";
 
 export function registerDbIncomeIPChandlers() {
     ipcMain.handle("get-income-categories", async (_)
@@ -45,6 +47,22 @@ export function registerDbExpenseIPCHandlers() {
         try {
             const data = await getExpenseCategories();
             return ipcResponseSuccess<ExpenseCategoryInterface[]>(data);
+        } catch (error: any) {
+            return ipcResponseFailed(error);
+        }
+    });
+
+    ipcMain.handle('add-expense', async (_, expenseData: { title: string, amount: number, category_id: number, wallet_id: number, description?: string })
+    : Promise<IPCResponse<ExpenseInterface | null>> => {
+        try {
+            const data = await createExpense(
+                expenseData.title,
+                expenseData.amount,
+                expenseData.category_id,
+                expenseData.wallet_id,
+                expenseData.description
+            );
+            return ipcResponseSuccess<ExpenseInterface>(data);
         } catch (error: any) {
             return ipcResponseFailed(error);
         }
