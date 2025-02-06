@@ -72,7 +72,7 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
 
     const initWallets = async () => { // Add this function
         const response = await window.db_wallets.getWallets();
-        if (response.status) {
+        if (response.success) {
             formData.wallet_id = response.data[0].id ?? -1;
             setWallets(response.data);
         } else {

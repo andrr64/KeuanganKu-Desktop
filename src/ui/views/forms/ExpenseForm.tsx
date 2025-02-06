@@ -60,7 +60,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
         setLoading(true);
         waitMs(200);
         const response = await window.db_expenses.addExpense(formData);
-        if (response.status) {
+        if (response.success) {
             showAlert("success", "Expense added successfully");
         } else {
             showAlert("error", "Failed to add expense");
@@ -81,7 +81,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
     };
     const initWallets = async () => {
         const response = await window.db_wallets.getWallets();
-        if (response.status) {
+        if (response.success) {
             formData.wallet_id = response.data[0].id ?? -1;
             setWallets(response.data);
         } else {

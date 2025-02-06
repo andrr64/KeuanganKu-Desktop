@@ -1,5 +1,5 @@
 export interface IPCResponse<T> {
-    status: boolean;
+    success: boolean;
     data: T;
     message: string;
 }

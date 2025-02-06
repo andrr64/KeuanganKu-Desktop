@@ -1,15 +1,27 @@
 import { Button } from '@mui/material'
 import { MainContent } from '../MainLayout'
 import ModalContainer from '../modals/ModalContainer'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import IncomeForm from '../forms/IncomeForms';
 import ExpenseForm from '../forms/ExpenseForm';
 import WalletForm from '../forms/WalletForm'; // Import WalletForm
+import { WalletInterface } from '../../interfaces/wallet';
 
 function WalletPage() {
   const [openIncomeForm, setOpenIncomeForm] = useState(false);
   const [openExpenseForm, setOpenExpenseForm] = useState(false);
   const [openWalletForm, setOpenWalletForm] = useState(false); // State for WalletForm
+  const [wallets, setWallets] = useState<WalletInterface[]>([]); // State for wallets
+
+  useEffect(() => {
+    async function fetchWallets() {
+      const response = await window.db_wallets.getWallets();
+      if (response.success) {
+        setWallets(response.data);
+      }
+    }
+    fetchWallets();
+  }, []);
 
   return (
     <>
