@@ -3,6 +3,7 @@ import { WalletInterface } from "./ui/interfaces/wallet";
 import { IncomeCategoryInterface } from "./ui/interfaces/income_category";
 import { ExpenseCategoryInterface } from "./ui/interfaces/expense_category";
 import { IPCResponse } from "./ui/interfaces/ipc_response";
+import { IncomeFormInterface } from "./ui/interfaces/income_form";
 
 declare global {
     interface Window {
@@ -15,8 +16,11 @@ declare global {
         db_income_categories: {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>,
         };
+        db_incomes: {
+            addIncome: (incomeData: IncomeFormInterface) => Promise<IPCResponse<IncomeInterface | null>>
+        };
         db_wallets: {
-            addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface>>;
+            addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
         };
         app_sys: {

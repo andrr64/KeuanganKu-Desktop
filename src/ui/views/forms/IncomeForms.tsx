@@ -6,14 +6,7 @@ import { WalletInterface } from '../../interfaces/wallet'; // Add this line
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { waitMs } from '../../util';
-
-interface IncomeFormInterface {
-    title: string;
-    description: string;
-    amount: number;
-    category_id: number;
-    wallet_id: number; // Add this line
-}
+import { IncomeFormInterface } from '../../interfaces/income_form';
 
 interface IncomeFormUIProps {
     whenIconCloseFire: () => void;
@@ -44,7 +37,7 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
         }
         setFormData({
             ...formData,
-            [name as string]: value,
+            [name as string]: name === 'amount' ? Number(value) : value, // Ensure amount is a number
         });
     };
 
@@ -59,8 +52,14 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
         }
         setLoading(true);
         await waitMs(250);
+        const response = await window.db_incomes.addIncome(formData);
         setLoading(false);
-        console.log(formData);
+        if (response.success) {
+            showAlert("success", "Income added successfully");
+        } else {
+            showAlert("error", response.message);
+        }
+        return;
     };
 
     const initCategories = async () => {

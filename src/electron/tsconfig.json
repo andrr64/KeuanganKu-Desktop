@@ -5,6 +5,8 @@
         "module": "NodeNext",
         "strict": true,
         "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
     },
     "paths": {
       "@data_interfaces/*": ["data_interfaces/*"]
