@@ -1,3 +1,4 @@
+import { ExpenseInterface } from "../interfaces/expense.js";
 import ExpenseModel from "../models/expense.js";
 
 // Create a new expense
@@ -11,7 +12,9 @@ import ExpenseModel from "../models/expense.js";
  * @returns {Promise<ExpenseModel>} The created expense record.
  * @throws {Error} If there is an error creating the expense.
  */
-export const createExpense = async (title: string, amount: number, category_id: number, wallet_id: number, description?: string) => {
+
+
+export const createExpense = async (title: string, amount: number, category_id: number, wallet_id: number, description?: string): Promise<ExpenseInterface> => {
     try {
         const expense = await ExpenseModel.create({ 
             title, 
@@ -22,7 +25,7 @@ export const createExpense = async (title: string, amount: number, category_id: 
             createdAt: new Date(), 
             updatedAt: new Date() 
         });
-        return expense;
+        return expense.toJSON();
     } catch (error: any) {
         throw new Error(`Error creating expense: ${error.message}`);
     }
@@ -36,13 +39,13 @@ export const createExpense = async (title: string, amount: number, category_id: 
  * @returns {Promise<ExpenseModel>} A promise that resolves to the expense object if found.
  * @throws {Error} If the expense is not found or if there is an error during the fetch operation.
  */
-export const getExpenseById = async (id: number) => {
+export const getExpenseById = async (id: number)=> {
     try {
         const expense = await ExpenseModel.findByPk(id);
         if (!expense) {
             throw new Error('Expense not found');
         }
-        return expense;
+        return expense.toJSON();
     } catch (error: any) {
         throw new Error(`Error fetching expense: ${error.message}`);
     }
@@ -60,7 +63,7 @@ export const getExpenseById = async (id: number) => {
  * @returns {Promise<ExpenseModel>} The updated expense object.
  * @throws {Error} If the expense is not found or there is an error during the update.
  */
-export const updateExpense = async (id: number, title: string, amount: number, category_id: number, description?: string) => {
+export const updateExpense = async (id: number, title: string, amount: number, category_id: number, description?: string): Promise<ExpenseInterface> => {
     try {
         const expense = await ExpenseModel.findByPk(id);
         if (!expense) {
@@ -74,7 +77,7 @@ export const updateExpense = async (id: number, title: string, amount: number, c
         }
         expense.updatedAt = new Date();
         await expense.save();
-        return expense;
+        return expense.toJSON();
     } catch (error: any) {
         throw new Error(`Error updating expense: ${error.message}`);
     }
@@ -98,5 +101,21 @@ export const deleteExpense = async (id: number) => {
         return true;
     } catch (error: any) {
         throw new Error(`Error deleting expense: ${error.message}`);
+    }
+};
+
+// Retrieve all expenses
+/**
+ * Retrieves all expense records from the database.
+ *
+ * @returns {Promise<ExpenseModel[]>} A promise that resolves to an array of expense records.
+ * @throws {Error} If there is an error fetching the expense records.
+ */
+export const getAllExpenses = async (): Promise<ExpenseModel[]> => {
+    try {
+        const expenses = await ExpenseModel.findAll();
+        return expenses.map(expense => expense.toJSON());
+    } catch (error: any) {
+        throw new Error('Error fetching expenses: ' + error.message);
     }
 };

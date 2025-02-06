@@ -1,3 +1,4 @@
+import { ExpenseCategoryInterface } from "../interfaces/expense_category.js";
 import ExpenseCategoryModel from "../models/expense_category.js";
 
 // Create a new expense category
@@ -31,7 +32,7 @@ export const createExpenseCategory = async (name: string, description?: string) 
  * @returns {Promise<ExpenseCategoryModel>} A promise that resolves to the expense category if found.
  * @throws {Error} If the expense category is not found or if there is an error during retrieval.
  */
-export const getExpenseCategoryById = async (id: number): Promise<{}> => {
+export const getExpenseCategoryById = async (id: number): Promise<ExpenseCategoryInterface> => {
     try {
         const expenseCategory = await ExpenseCategoryModel.findByPk(id);
         if (!expenseCategory) {
@@ -51,7 +52,7 @@ export const getExpenseCategoryById = async (id: number): Promise<{}> => {
  * @returns {Promise<{}[]>} A promise that resolves to an array of expense categories.
  * @throws {Error} If there is an error during retrieval.
  */
-export const getExpenseCategoriesJSON = async (): Promise<{}[]> => {
+export const getExpenseCategories = async (): Promise<ExpenseCategoryInterface[]> => {
     try {
         const expenseCategories = await ExpenseCategoryModel.findAll();
         return expenseCategories.map(category => category.toJSON());
@@ -124,7 +125,10 @@ export const initExpenseCategories = async (): Promise<void> => {
         { name: 'Groceries', description: 'Monthly groceries' },
         { name: 'Gasoline', description: 'Gas for vehicle, bro.' },
     ];
-
+    const existingCategories = await getExpenseCategories();
+    if (existingCategories.length > 0) {
+        return;
+    }
     for (const category of categories) {
         try {
             await createExpenseCategory(category.name, category.description);

@@ -8,10 +8,10 @@ import IncomeModel from "../models/income.js";
  * @returns {Promise<IncomeModel>} The created income record.
  * @throws {Error} If there is an error while adding the income.
  */
-export const addIncome = async (incomeData: IncomeInterface): Promise<IncomeModel> => {
+export const addIncome = async (incomeData: IncomeInterface): Promise<IncomeInterface> => {
     try {
         const income = await IncomeModel.create(incomeData);
-        return income;
+        return income.toJSON();
     } catch (error: any) {
         throw new Error('Error adding income: ' + error.message);
     }
@@ -26,7 +26,7 @@ export const addIncome = async (incomeData: IncomeInterface): Promise<IncomeMode
 export const getAllIncomes = async (): Promise<IncomeModel[]> => {
     try {
         const incomes = await IncomeModel.findAll();
-        return incomes;
+        return incomes.map(income => income.toJSON());
     } catch (error: any) {
         throw new Error('Error fetching incomes: ' + error.message);
     }

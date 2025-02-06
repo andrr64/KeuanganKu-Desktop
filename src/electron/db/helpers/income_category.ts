@@ -1,3 +1,4 @@
+import { IncomeCategoryInterface } from "../interfaces/income_category.js";
 import IncomeCategoryModel from "../models/income_category.js";
 
 // Create a new income category
@@ -51,11 +52,10 @@ export const getIncomeCategoryById = async (id: number): Promise<{}> => {
  * @returns {Promise<IncomeCategoryModel[]>} A promise that resolves to an array of income categories.
  * @throws {Error} If there is an error fetching the income categories.
  */
-export const getIncomeCategories = async (): Promise<{}[]> => {
+export const getIncomeCategories = async (): Promise<IncomeCategoryInterface[]> => {
     try {
         const incomeCategories = await IncomeCategoryModel.findAll();
-        const jsonIncomeCategories = incomeCategories.map((category) => category.toJSON());
-        return jsonIncomeCategories;
+        return incomeCategories.map(category => category.toJSON());
     } catch (error: any) {
         throw new Error(`Error fetching income categories: ${error.message}`);
     }
@@ -129,7 +129,10 @@ export const initIncomeCategories = async (): Promise<void> => {
         { name: 'Freelance', description: 'Freelance work income' },
         { name: 'Investments', description: 'Income from investments' },
     ];
-
+    const existingCategories = await getIncomeCategories();
+    if (existingCategories.length > 0) {
+        return;
+    }
     for (const category of categories) {
         try {
             await createIncomeCategory(category.name, category.description);

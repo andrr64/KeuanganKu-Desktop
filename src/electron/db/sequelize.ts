@@ -7,7 +7,6 @@ const sequelize = new Sequelize({
 
 const initializeDatabase = async () => {
     try {
-        // Pastikan sequelize sudah terhubung dengan database sebelum menyinkronkan
         await sequelize.sync({ force: false });
         console.log('Berhasil menyinkronkan database');
     } catch (error) {
