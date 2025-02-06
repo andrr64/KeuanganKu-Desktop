@@ -14,6 +14,7 @@ declare global {
         };
         db_wallets: {
             addWallet: (title: string) => Promise<IPCResponse<WalletInterface>>;
+            getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
         };
         app_sys: {
             quitApp: () => Promise<void>;

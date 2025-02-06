@@ -4,12 +4,15 @@ import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
+import { waitMs } from '../../util';
+import { WalletInterface } from '../../interfaces/wallet';
 
 interface ExpenseFormProps {
     title: string;
     description: string;
     amount: number;
     category_id: number;
+    wallet_id: number; // Add this line
 }
 
 interface ExpenseFormUIProps{
@@ -24,13 +27,19 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
         description: '',
         amount: 0,
         category_id: -1,
+        wallet_id: -1, // Add this line
     });
     const [categories, setCategories] = React.useState<ExpenseCategoryInterface[]>([]);
+    const [wallets, setWallets] = React.useState<WalletInterface[]>([]); 
 
     const handleChange = (e: any | { name?: string; value: unknown }) => {
         const { name, value } = e.target;
         if (name == 'category_id' && value == -1) {
             showAlert("warning", "Please select a category");
+            return;
+        }
+        if (name == 'wallet_id' && value == -1) {
+            showAlert("warning", "Please select a wallet");
             return;
         }
         setFormData({
@@ -39,20 +48,47 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (formData.amount > 1_000_000_000_000) {
             showAlert("error", "Amount cannot exceed 1 trillion");
             return;
-        }
-        // Handle form submission logic here
+        } else if (formData.amount <= 0) {
+            showAlert("error", "Amount must be greater than 0");
+            return;
+        } 
+        setLoading(true);
+        ///TODO: handle submit logic here
+        await waitMs(250);
+        setLoading(false);
         console.log(formData);
     };
 
-    const initData = async () => {
+    const initCategories = async () => {
         const response = await window.db_expense_categories.getExpenseCategories();
-        formData.category_id = response.data[0].id?? 0;
-        setCategories(response.data);
+        if (response.data) {
+            formData.category_id = response.data[0].id ?? 0;
+            setCategories(response.data);
+        } else {
+            showAlert("error", "Failed to fetch categories");
+            whenIconCloseFire();
+        }
+    };
+    const initWallets = async () => {
+        const response = await window.db_wallets.getWallets();
+        if (response.status) {
+            formData.wallet_id = response.data[0].id ?? -1;
+            setWallets(response.data);
+        } else {
+            showAlert("error", "Failed to fetch wallets");
+            whenIconCloseFire();
+        }
+    };
+
+
+    const initData = async () => {
+        await initCategories();
+        await initWallets();
         setLoading(false);
     };
 
@@ -134,6 +170,22 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
                         {categories.map((cat) => (
                             <MenuItem key={cat.id} value={cat.id}>
                                 {cat.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl fullWidth required>
+                    <InputLabel id="wallet-label">Wallet</InputLabel>
+                    <Select
+                        labelId="wallet-label"
+                        name="wallet_id"
+                        value={formData.wallet_id}
+                        onChange={handleChange}
+                        label="Wallet"
+                    >
+                        {wallets.map((wallet) => (
+                            <MenuItem key={wallet.id} value={wallet.id}>
+                                {wallet.title}
                             </MenuItem>
                         ))}
                     </Select>
