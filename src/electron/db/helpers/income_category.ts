@@ -1,4 +1,4 @@
-import { IncomeCategoryInterface } from "../interfaces/income_category.js";
+import { IncomeCategoryInterface } from "../../interfaces/income_category.js";
 import IncomeCategoryModel from "../models/income_category.js";
 
 // Create a new income category

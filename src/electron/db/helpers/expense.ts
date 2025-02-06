@@ -1,4 +1,4 @@
-import { ExpenseInterface } from "../interfaces/expense.js";
+import { ExpenseInterface } from "../../interfaces/expense.js";
 import ExpenseModel from "../models/expense.js";
 
 // Create a new expense

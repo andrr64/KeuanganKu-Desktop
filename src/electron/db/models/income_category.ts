@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../sequelize.js';
-import { IncomeCategoryInterface } from '../interfaces/income_category.js';
+import { IncomeCategoryInterface } from '../../interfaces/income_category.js';
 
 class IncomeCategoryModel extends Model<IncomeCategoryInterface> implements IncomeCategoryInterface {
     public id?: number;

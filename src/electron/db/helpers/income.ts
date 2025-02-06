@@ -1,4 +1,4 @@
-import { IncomeInterface } from "../interfaces/income.js";
+import { IncomeInterface } from "../../interfaces/income.js";
 import IncomeModel from "../models/income.js";
 
 /**

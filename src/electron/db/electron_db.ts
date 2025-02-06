@@ -2,14 +2,14 @@ import { ipcMain } from "electron";
 import { getIncomeCategories } from "./helpers/income_category.js";
 import { getExpenseCategories } from "./helpers/expense_category.js";
 import { addWallet, getWallets } from "./helpers/wallet.js";
-import { WalletInterface } from "./interfaces/wallet.js";
+import { WalletInterface } from "../interfaces/wallet.js";
 import { IPCResponse, ipcResponseFailed, ipcResponseSuccess } from "../interfaces/ipc_response.js";
 import { addIncome } from "./helpers/income.js";
-import { IncomeInterface } from "./interfaces/income.js";
-import { ExpenseCategoryInterface } from "./interfaces/expense_category.js";
-import { IncomeCategoryInterface } from "./interfaces/income_category.js";
+import { IncomeInterface } from "../interfaces/income.js";
+import { ExpenseCategoryInterface } from "../interfaces/expense_category.js";
+import { IncomeCategoryInterface } from "../interfaces/income_category.js";
 import { createExpense } from "./helpers/expense.js";
-import { ExpenseInterface } from "./interfaces/expense.js";
+import { ExpenseInterface } from "../interfaces/expense.js";
 
 export function registerDbIncomeIPChandlers() {
     ipcMain.handle("get-income-categories", async (_)

@@ -1,4 +1,4 @@
-import { ExpenseCategoryInterface } from "../interfaces/expense_category.js";
+import { ExpenseCategoryInterface } from "../../interfaces/expense_category.js";
 import ExpenseCategoryModel from "../models/expense_category.js";
 
 // Create a new expense category

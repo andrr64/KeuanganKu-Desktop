@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../sequelize.js';
-import { WalletInterface } from '../interfaces/wallet.js';
+import { WalletInterface } from '../../interfaces/wallet.js';
 
 // Model untuk Wallet
 class WalletModel extends Model<WalletInterface> implements WalletInterface {

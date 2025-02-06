@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../sequelize.js';
-import { ExpenseInterface } from '../interfaces/expense.js';
+import { ExpenseInterface } from '../../interfaces/expense.js';
 
 class ExpenseModel extends Model<ExpenseInterface> implements ExpenseInterface {
     public id?: number;

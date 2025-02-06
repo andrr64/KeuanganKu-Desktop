@@ -1,5 +1,5 @@
 import WalletModel from '../models/wallet.js';
-import { WalletInterface } from '../interfaces/wallet.js';
+import { WalletInterface } from '../../interfaces/wallet.js';
 
 /**
  * Add a new wallet
