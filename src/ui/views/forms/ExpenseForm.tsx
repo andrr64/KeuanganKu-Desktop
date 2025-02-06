@@ -7,7 +7,7 @@ import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
 import { WalletInterface } from '../../interfaces/wallet';
 import { waitMs } from '../../util';
 
-interface ExpenseFormProps {
+interface ExpenseFormInterface {
     title: string;
     description: string;
     amount: number;
@@ -22,7 +22,7 @@ interface ExpenseFormUIProps{
 const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
     const [loading, setLoading] = React.useState(true);
     const { showAlert } = useAlert();
-    const [formData, setFormData] = React.useState<ExpenseFormProps>({
+    const [formData, setFormData] = React.useState<ExpenseFormInterface>({
         title: '',
         description: '',
         amount: 0,

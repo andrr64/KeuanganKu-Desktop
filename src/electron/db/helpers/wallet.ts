@@ -8,7 +8,8 @@ import { WalletInterface } from '../../interfaces/wallet.js';
  */
 export const addWallet = async (wallet: WalletInterface): Promise<WalletInterface> => {
     const newWallet = await WalletModel.create({
-        title: wallet.title
+        title: wallet.title,
+        balance: wallet.balance
     });
     return newWallet.toJSON();
 };

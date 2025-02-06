@@ -16,7 +16,7 @@ declare global {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>,
         };
         db_wallets: {
-            addWallet: (title: string) => Promise<IPCResponse<WalletInterface>>;
+            addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface>>;
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
         };
         app_sys: {

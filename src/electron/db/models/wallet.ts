@@ -8,6 +8,7 @@ class WalletModel extends Model<WalletInterface> implements WalletInterface {
     public title!: string;
     public createdAt!: Date;
     public updatedAt!: Date;
+    public balance!: number;
 }
 
 WalletModel.init(
@@ -20,6 +21,14 @@ WalletModel.init(
         title: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        balance: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0,
+            validate: {
+                min: 0
+            }
         },
         createdAt: {
             type: DataTypes.DATE,

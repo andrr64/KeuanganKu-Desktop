@@ -9,8 +9,8 @@ const database = {
 }
 
 electron.contextBridge.exposeInMainWorld(database.wallet, {
-    addWallet: (title: string) => {
-        return electron.ipcRenderer.invoke("add-wallet", title);
+    addWallet: (title: string, balance: number= 0) => {
+        return electron.ipcRenderer.invoke("add-wallet", title, balance);
     },
     getWallets: () => {
         return electron.ipcRenderer.invoke("get-wallets");
@@ -18,14 +18,14 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
 });
 
 electron.contextBridge.exposeInMainWorld(database.incomes, {
-    addIncome: (title: string, description: string, amount: number, category_id: number, wallet_id: number) => {
-        return electron.ipcRenderer.invoke("add-income", { title, description, amount, category_id, wallet_id });
+    addIncome: (data: {title: string, description?: string, amount: number, category_id: number, wallet_id: number}) => {
+        return electron.ipcRenderer.invoke("add-income", data);
     }
 });
 
 electron.contextBridge.exposeInMainWorld(database.expenses, {
-    addExpense: (title: string, description: string, amount: number, category_id: number, wallet_id: number) => {
-        return electron.ipcRenderer.invoke("add-expense", { title, description, amount, category_id, wallet_id });
+    addExpense: (data: {title: string, description?: string, amount: number, category_id: number, wallet_id: number}) => {
+        return electron.ipcRenderer.invoke("add-expense", data);
     }
 });
 

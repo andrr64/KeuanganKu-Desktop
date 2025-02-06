@@ -7,6 +7,7 @@ import { waitMs } from '../../util';
 
 interface WalletFormProps {
     title: string;
+    balance: number;
 }
 
 interface WalletFormUIProps {
@@ -18,13 +19,14 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<WalletFormProps>({
         title: '',
+        balance: 0,
     });
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name as string]: value,
+            [name as string]: name === 'balance' ? parseFloat(value) : value,
         });
     };
 
@@ -34,9 +36,13 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
             showAlert("warning", "Title cannot be empty");
             return;
         }
+        if (isNaN(formData.balance) || formData.balance < 0) {
+            showAlert("warning", "Balance must be a non-negative number");
+            return;
+        }
         setLoading(true);
         await waitMs(200);
-        const response = await window.db_wallets.addWallet(formData.title);
+        const response = await window.db_wallets.addWallet(formData.title, formData.balance);
         setLoading(false);
         if (response.success) {
             const newWallet = response.data; ///TODO: handle new wallet
@@ -87,6 +93,15 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
                     label="Title"
                     name="title"
                     value={formData.title}
+                    onChange={handleChange}
+                    required
+                    fullWidth
+                />
+                <TextField
+                    label="Balance"
+                    name="balance"
+                    type="number"
+                    value={formData.balance}
                     onChange={handleChange}
                     required
                     fullWidth

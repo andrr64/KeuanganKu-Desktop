@@ -22,18 +22,10 @@ export function registerDbIncomeIPChandlers() {
         }
     });
 
-    ipcMain.handle('add-income', async (_, incomeData: { title: string, description: string, amount: number, category_id: number, wallet_id: number })
+    ipcMain.handle('add-income', async (_, incomeData: IncomeInterface)
     : Promise<IPCResponse<IncomeInterface | null>> => {
         try {
-            const data = await addIncome({
-                title: incomeData.title,
-                amount: incomeData.amount,
-                description: incomeData.description,
-                wallet_id: incomeData.wallet_id,
-                category_id: incomeData.category_id,
-                createdAt: new Date(),
-                updatedAt: new Date()
-            });
+            const data = await addIncome(incomeData);
             return ipcResponseSuccess<IncomeInterface>(data);
         } catch (error: any) {
             return ipcResponseFailed(error);
@@ -70,10 +62,10 @@ export function registerDbExpenseIPCHandlers() {
 }
 
 export function registerDbWalletIPCHandlers() {
-    ipcMain.handle("add-wallet", async (_, walletName: string)
+    ipcMain.handle("add-wallet", async (_, walletName: string, balance: number)
     : Promise<IPCResponse<WalletInterface | null>> => {
         try {
-            return ipcResponseSuccess<WalletInterface>(await addWallet({title: walletName}));
+            return ipcResponseSuccess<WalletInterface>(await addWallet({ title: walletName, balance}));
         } catch (error: any) {
             return ipcResponseFailed(error);
         }

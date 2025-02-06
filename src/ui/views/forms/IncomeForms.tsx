@@ -7,7 +7,7 @@ import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { waitMs } from '../../util';
 
-interface IncomeFormProps {
+interface IncomeFormInterface {
     title: string;
     description: string;
     amount: number;
@@ -22,7 +22,7 @@ interface IncomeFormUIProps {
 const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
     const [loading, setLoading] = React.useState(true);
     const { showAlert } = useAlert();
-    const [formData, setFormData] = React.useState<IncomeFormProps>({
+    const [formData, setFormData] = React.useState<IncomeFormInterface>({
         title: '',
         description: '',
         amount: 0,
@@ -58,7 +58,6 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
             return;
         }
         setLoading(true);
-        ///TODO: handle submit logic here
         await waitMs(250);
         setLoading(false);
         console.log(formData);
