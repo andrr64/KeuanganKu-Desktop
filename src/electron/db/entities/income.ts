@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
 import IncomeCategory from './income_category.js';
 import Wallet from './wallet.js';
+import { IIncome } from '../interfaces/Income.js';
 
 @Entity('incomes')
 class Income extends BaseEntity {
@@ -29,6 +30,19 @@ class Income extends BaseEntity {
 
   @Column({ type: 'text', nullable: true })
   public description!: string;
+
+  public toInterface(): IIncome {
+    return {
+      id: this.id,
+      title: this.title,
+      amount: this.amount,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      categoryId: this.categoryId,
+      walletId: this.walletId,
+      description: this.description,
+    };
+  }
 }
 
 export default Income;

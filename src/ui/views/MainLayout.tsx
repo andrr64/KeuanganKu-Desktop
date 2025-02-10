@@ -61,6 +61,7 @@ function MainLayout() {
     };
     const handleExit = async () => {
         showQuestion("Exit", "Are you sure you want to exit?", () => {
+            window.app_sys.quitApp();
         })
     }
     const drawerItems = [

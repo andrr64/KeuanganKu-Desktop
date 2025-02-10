@@ -15,11 +15,11 @@ interface ExpenseFormInterface {
     wallet_id: number; // Add this line
 }
 
-interface ExpenseFormUIProps{
+interface ExpenseFormUIProps {
     whenIconCloseFire: () => void;
 }
 
-const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
+const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
     const [loading, setLoading] = React.useState(true);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<ExpenseFormInterface>({
@@ -30,7 +30,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
         wallet_id: -1, // Add this line
     });
     const [categories, setCategories] = React.useState<ExpenseCategoryInterface[]>([]);
-    const [wallets, setWallets] = React.useState<WalletInterface[]>([]); 
+    const [wallets, setWallets] = React.useState<WalletInterface[]>([]);
 
     const handleChange = (e: any | { name?: string; value: unknown }) => {
         const { name, value } = e.target;
@@ -56,7 +56,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
         } else if (formData.amount <= 0) {
             showAlert("error", "Amount must be greater than 0");
             return;
-        } 
+        }
         setLoading(true);
         waitMs(200);
         const response = await window.db_expenses.addExpense(formData);
@@ -81,6 +81,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
     };
     const initWallets = async () => {
         const response = await window.db_wallets.getWallets();
+        console.log(response.success);
         if (response.success) {
             formData.wallet_id = response.data[0].id ?? -1;
             setWallets(response.data);
@@ -120,9 +121,9 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
                     minWidth: 400,
                 }}
             >
-                <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'start',
                 }}>
                     <Box>
@@ -190,7 +191,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({whenIconCloseFire}) => {
                     >
                         {wallets.map((wallet) => (
                             <MenuItem key={wallet.id} value={wallet.id}>
-                                {wallet.title}
+                                {`${wallet.name} (${wallet.balance})`}
                             </MenuItem>
                         ))}
                     </Select>

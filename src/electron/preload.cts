@@ -14,6 +14,12 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
     },
     getWallets: () => {
         return electron.ipcRenderer.invoke("get-wallets");
+    },
+    updateWallet: (id: number, title: string, balance: number) => {
+        return electron.ipcRenderer.invoke("update-wallet", id, title, balance);
+    },
+    deleteWallet: (id: number) => {
+        return electron.ipcRenderer.invoke("delete-wallet", id);
     }
 });
 

@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
 import { ExpenseCategory } from './expense_category.js';
 import Wallet from './wallet.js';
+import { IExpense } from '../interfaces/Expense.js';
 
 @Entity('expenses')
 class Expense extends BaseEntity {
@@ -32,6 +33,20 @@ class Expense extends BaseEntity {
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updatedAt!: Date;
+
+  public toInterface(): IExpense {
+    return {
+      id: this.id,
+      amount: this.amount,
+      date: this.date,
+      categoryId: this.categoryId,
+      walletId: this.walletId,
+      title: this.title,
+      description: this.description,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }
 
 export default Expense;

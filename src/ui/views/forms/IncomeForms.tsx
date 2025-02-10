@@ -176,9 +176,9 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
                         onChange={handleChange}
                         label="Wallet"
                     >
-                        {wallets.map((wallet) => (
+                        {wallets.map((wallet: WalletInterface) => (
                             <MenuItem key={wallet.id} value={wallet.id}>
-                                {wallet.title}
+                                {wallet.name}
                             </MenuItem>
                         ))}
                     </Select>

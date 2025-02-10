@@ -1,7 +1,8 @@
 export interface WalletInterface {
-    id?: number;
-    title: string;
+    id: number;
+    name: string;
+    description?: string;
     balance: number;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
 }

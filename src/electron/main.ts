@@ -1,8 +1,13 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { isDev } from './util.js';
 import * as path from 'path';
 import { getPreloadPath } from './getPath.js';
-
+import AppDataSource from './db/config/ormconfig.js';
+import { ExpenseCategory } from './db/entities/expense_category.js';
+import IncomeCategory from './db/entities/income_category.js';
+import { registerDbWalletsIPCHandler } from './ipc-handler/db_wallets.js';
+import { registerDbIncomeCategoriesIPCHandler } from './ipc-handler/db_income_categories.js';
+import { registerDbExpenseCategoriesIPCHandler } from './ipc-handler/db_expense_category.js';
 
 const createWindow = (): void => {
     const mainWindow = new BrowserWindow({
@@ -22,6 +27,18 @@ const createWindow = (): void => {
 
 app.whenReady().then(async () => {
     try {
+        await AppDataSource.initialize(); 
+        await ExpenseCategory.initData();
+        await IncomeCategory.initData();
+
+        registerDbWalletsIPCHandler();
+        registerDbIncomeCategoriesIPCHandler();
+        registerDbExpenseCategoriesIPCHandler();
+
+        ipcMain.handle('quit-app', () => {
+            app.quit();
+        });
+
         createWindow();
     } catch (err: any) {
         console.error('Gagal membuka database:', err.message);

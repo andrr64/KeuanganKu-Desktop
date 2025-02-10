@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm';
+import { IIncomeCategory } from '../interfaces/IncomeCategory.js';
 
 @Entity('income_categories')
 class IncomeCategory extends BaseEntity {
@@ -13,6 +14,34 @@ class IncomeCategory extends BaseEntity {
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updatedAt!: Date;
+
+  public static async initData() {
+    const count = await IncomeCategory.count();
+    if (count < 1) {
+      const categories = [
+        { name: 'Salary' },
+        { name: 'Business' },
+        { name: 'Investment' },
+        { name: 'Gift' },
+        { name: 'Other' }
+      ];
+      
+      for (const category of categories) {
+        const incomeCategory = new IncomeCategory();
+        incomeCategory.name = category.name;
+        await incomeCategory.save();
+      }
+    }
+  }
+
+  public toInterface(): IIncomeCategory{
+    return {
+      id: this.id,
+      name: this.name,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }
 
 export default IncomeCategory;
