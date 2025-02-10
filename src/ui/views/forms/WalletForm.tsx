@@ -31,26 +31,32 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (formData.title.trim() === '') {
-            showAlert("warning", "Title cannot be empty");
-            return;
+        try {
+            e.preventDefault();
+            if (formData.title.trim() === '') {
+                showAlert("warning", "Title cannot be empty");
+                return;
+            }
+            if (isNaN(formData.balance) || formData.balance < 0) {
+                showAlert("warning", "Balance must be a non-negative number");
+                return;
+            }
+            setLoading(true);
+            await waitMs(200);
+            const response = await window.db_wallets.addWallet(formData.title, formData.balance);
+            setLoading(false);
+            if (response.success) {
+                const newWallet = response.data; ///TODO: handle new wallet
+                showAlert("success", "Wallet has been successfully added");
+                whenIconCloseFire();
+            } else {
+                showAlert("error", response.message);
+            }
+        } catch (error: any) {
+            if (loading) { setLoading(false); }
+            showAlert('error', error.message);
         }
-        if (isNaN(formData.balance) || formData.balance < 0) {
-            showAlert("warning", "Balance must be a non-negative number");
-            return;
-        }
-        setLoading(true);
-        await waitMs(200);
-        const response = await window.db_wallets.addWallet(formData.title, formData.balance);
-        setLoading(false);
-        if (response.success) {
-            const newWallet = response.data; ///TODO: handle new wallet
-            showAlert("success", "Wallet has been successfully added");
-            whenIconCloseFire();
-        } else {
-            showAlert("error", response.message);
-        }
+        return;
     };
 
     return (
@@ -72,9 +78,9 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
                     minWidth: 400,
                 }}
             >
-                <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     alignItems: 'start',
                 }}>
                     <Box>

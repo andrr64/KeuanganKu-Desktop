@@ -4,6 +4,7 @@ import { IncomeCategoryInterface } from "./ui/interfaces/income_category";
 import { ExpenseCategoryInterface } from "./ui/interfaces/expense_category";
 import { IPCResponse } from "./ui/interfaces/ipc_response";
 import { IncomeFormInterface } from "./ui/interfaces/income_form";
+import { ExpenseFormInterface } from "./ui/interfaces/expense_form";
 
 declare global {
     interface Window {
@@ -11,7 +12,7 @@ declare global {
             getExpenseCategories: () => Promise<IPCResponse<ExpenseCategoryInterface[]>>,
         };
         db_expenses: {
-            addExpense: (expenseData: { title: string, amount: number, category_id: number, wallet_id: number, description?: string }) => Promise<IPCResponse<ExpenseInterface | null>>
+            addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>
         },
         db_income_categories: {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>,

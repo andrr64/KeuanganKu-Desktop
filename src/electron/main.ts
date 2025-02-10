@@ -8,6 +8,8 @@ import IncomeCategory from './db/entities/income_category.js';
 import { registerDbWalletsIPCHandler } from './ipc-handler/db_wallets.js';
 import { registerDbIncomeCategoriesIPCHandler } from './ipc-handler/db_income_categories.js';
 import { registerDbExpenseCategoriesIPCHandler } from './ipc-handler/db_expense_category.js';
+import { registerDBExpenseIPCHandler } from './ipc-handler/db_expense.js';
+import { registerDBIncomeIPCHandler } from './ipc-handler/db_income.js';
 
 const createWindow = (): void => {
     const mainWindow = new BrowserWindow({
@@ -34,7 +36,9 @@ app.whenReady().then(async () => {
         registerDbWalletsIPCHandler();
         registerDbIncomeCategoriesIPCHandler();
         registerDbExpenseCategoriesIPCHandler();
-
+        registerDBExpenseIPCHandler();
+        registerDBIncomeIPCHandler();
+        
         ipcMain.handle('quit-app', () => {
             app.quit();
         });

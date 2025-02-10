@@ -42,24 +42,31 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (formData.amount > 1_000_000_000_000) {
-            showAlert("error", "Amount cannot exceed 1 trillion");
+        try {
+            e.preventDefault();
+            if (formData.amount > 1_000_000_000_000) {
+                showAlert("error", "Amount cannot exceed 1 trillion");
+                return;
+            } else if (formData.amount <= 0) {
+                showAlert("error", "Amount must be greater than 0");
+                return;
+            }
+            setLoading(true);
+            await waitMs(250);
+            const response = await window.db_incomes.addIncome(formData);
+            setLoading(false);
+            if (response.success) {
+                showAlert("success", "Income added successfully");
+            } else {
+                showAlert("error", response.message);
+            }
             return;
-        } else if (formData.amount <= 0) {
-            showAlert("error", "Amount must be greater than 0");
-            return;
+        } catch (error: any) {
+            if (loading){
+                setLoading(false);
+            }
+            showAlert('error', error.message)
         }
-        setLoading(true);
-        await waitMs(250);
-        const response = await window.db_incomes.addIncome(formData);
-        setLoading(false);
-        if (response.success) {
-            showAlert("success", "Income added successfully");
-        } else {
-            showAlert("error", response.message);
-        }
-        return;
     };
 
     const initCategories = async () => {

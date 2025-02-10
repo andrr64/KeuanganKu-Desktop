@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, SelectAllOutlined } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
 import { WalletInterface } from '../../interfaces/wallet';
 import { waitMs } from '../../util';
+import { IPCResponse } from '../../interfaces/ipc_response';
 
 interface ExpenseFormInterface {
     title: string;
@@ -49,24 +50,31 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (formData.amount > 1_000_000_000_000) {
-            showAlert("error", "Amount cannot exceed 1 trillion");
-            return;
-        } else if (formData.amount <= 0) {
-            showAlert("error", "Amount must be greater than 0");
-            return;
+        try {
+            e.preventDefault();
+            if (formData.amount > 1_000_000_000_000) {
+                showAlert("error", "Amount cannot exceed 1 trillion");
+                return;
+            } else if (formData.amount <= 0) {
+                showAlert("error", "Amount must be greater than 0");
+                return;
+            }
+            setLoading(true);
+            waitMs(200);
+            const response = await window.db_expenses.addExpense(formData);
+            if (response.success) {
+                showAlert("success", "Expense added successfully");
+            } else {
+                showAlert("error", response.message);
+            }
+            setLoading(false);
+        } catch (error: any) {
+            if  (loading){
+                setLoading(false);
+            }
+            showAlert('error', error.message)
         }
-        setLoading(true);
-        waitMs(200);
-        const response = await window.db_expenses.addExpense(formData);
-        if (response.success) {
-            showAlert("success", "Expense added successfully");
-        } else {
-            showAlert("error", "Failed to add expense");
-        }
-        setLoading(false);
-        console.log(formData);
+        return;
     };
 
     const initCategories = async () => {
