@@ -62,40 +62,50 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
             }
             return;
         } catch (error: any) {
-            if (loading){
+            if (loading) {
                 setLoading(false);
             }
             showAlert('error', error.message)
         }
     };
 
+
+
+
     const initCategories = async () => {
-        const response = await window.db_income_categories.getIncomeCategories();
+        const response = await window.db_expense_categories.getExpenseCategories();
+        if (!response.success) {
+            throw new Error(response.message);
+        }
         formData.category_id = response.data[0].id ?? 0;
         setCategories(response.data);
     };
 
-    const initWallets = async () => { // Add this function
+    const initWallets = async () => {
         const response = await window.db_wallets.getWallets();
-        if (response.success) {
-            formData.wallet_id = response.data[0].id ?? -1;
-            setWallets(response.data);
-        } else {
-            showAlert("error", "Failed to fetch wallets");
-            whenIconCloseFire();
+        if (!response.success) {
+            throw new Error(response.message);
         }
+
+        formData.wallet_id = response.data[0].id ?? -1;
+        setWallets(response.data);
     };
 
     const initData = async () => {
-        await initCategories();
-        await initWallets(); // Add this line
-        setLoading(false);
+        try {
+            await initWallets();
+            await initCategories();
+        } catch (error: any) {
+            showAlert('error', error.message);
+            whenIconCloseFire();
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         initData();
     }, []);
-
     return (
         <>
             <LoadingModal open={loading} />

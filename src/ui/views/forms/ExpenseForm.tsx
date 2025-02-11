@@ -68,7 +68,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
             }
             setLoading(false);
         } catch (error: any) {
-            if  (loading){
+            if (loading) {
                 setLoading(false);
             }
             showAlert('error', error.message)
@@ -78,31 +78,33 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
 
     const initCategories = async () => {
         const response = await window.db_expense_categories.getExpenseCategories();
-        if (response.data) {
-            formData.category_id = response.data[0].id ?? 0;
-            setCategories(response.data);
-        } else {
-            showAlert("error", "Failed to fetch categories");
-            whenIconCloseFire();
+        if (!response.success) {
+            throw new Error(response.message);
         }
+        formData.category_id = response.data[0].id ?? 0;
+        setCategories(response.data);
     };
+
     const initWallets = async () => {
         const response = await window.db_wallets.getWallets();
-        console.log(response.success);
-        if (response.success) {
-            formData.wallet_id = response.data[0].id ?? -1;
-            setWallets(response.data);
-        } else {
-            showAlert("error", "Failed to fetch wallets");
-            whenIconCloseFire();
+        if (!response.success) {
+            throw new Error(response.message);
         }
+
+        formData.wallet_id = response.data[0].id ?? -1;
+        setWallets(response.data);
     };
 
-
     const initData = async () => {
-        await initCategories();
-        await initWallets();
-        setLoading(false);
+        try {
+            await initWallets();
+            await initCategories();
+        } catch (error: any) {
+            showAlert('error', error.message);
+            whenIconCloseFire();
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
