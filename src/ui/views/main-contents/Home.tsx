@@ -3,7 +3,7 @@ import { MainContent } from "../MainLayout"
 
 function Homepage() {
     return (
-        <MainContent>
+        <MainContent sx={{backgroundColor: 'inherit'}}>
             <Typography variant="h4" gutterBottom>
                 Selamat Datang di Halaman Beranda
             </Typography>
