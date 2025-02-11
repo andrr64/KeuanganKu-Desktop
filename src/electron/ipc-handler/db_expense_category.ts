@@ -3,10 +3,13 @@ import { IPCResponse, ipcResponseError, ipcResponseSuccess } from "../db/interfa
 import { ExpenseCategory } from "../db/entities/expense_category.js";
 import { IExpenseCategory } from "../db/interfaces/ExpenseCategory.js";
 
-export function registerDbExpenseCategoriesIPCHandler(){
+export function registerDbExpenseCategoriesIPCHandler() {
     ipcMain.handle('get-expense-categories', async (): Promise<IPCResponse<IExpenseCategory[] | null>> => {
         try {
             const categories = await ExpenseCategory.find();
+            if (categories.length === 0) {
+                throw new Error("No income categories found");
+            }
             return ipcResponseSuccess(categories.map((category: ExpenseCategory) => category.toInterface()));
         } catch (error: any) {
             return ipcResponseError(error.message);

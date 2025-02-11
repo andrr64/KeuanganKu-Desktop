@@ -7,6 +7,9 @@ export function registerDbIncomeCategoriesIPCHandler(){
     ipcMain.handle('get-income-categories', async (): Promise<IPCResponse<IIncomeCategory[] | null>> => {
         try {
             const categories = await IncomeCategory.find();
+            if (categories.length === 0) {
+                throw new Error("No income categories found");
+            }
             return ipcResponseSuccess(categories.map((category: IncomeCategory ) => category.toInterface()));
         } catch (error: any) {
             return ipcResponseError(error.message);

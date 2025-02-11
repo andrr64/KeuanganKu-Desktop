@@ -3,8 +3,8 @@ import { Wallet } from '../db/entities/wallet.js';
 import { ipcResponseSuccess, ipcResponseError, IPCResponse } from '../db/interfaces/ipc_response.js';
 import { IWallet } from '../db/interfaces/Wallet.js';
 
-export function registerDbWalletsIPCHandler(){
-    ipcMain.handle('add-wallet', async (_, title, balance): Promise<IPCResponse<IWallet| null>> => {
+export function registerDbWalletsIPCHandler() {
+    ipcMain.handle('add-wallet', async (_, title, balance): Promise<IPCResponse<IWallet | null>> => {
         try {
             const wallet = new Wallet();
             wallet.name = title;
@@ -15,17 +15,20 @@ export function registerDbWalletsIPCHandler(){
             return ipcResponseError(error.message);
         }
     });
-    
+
     ipcMain.handle('get-wallets', async (_): Promise<IPCResponse<IWallet[] | null>> => {
         try {
             const wallets = await Wallet.find();
+            if (wallets.length === 0) {
+                throw new Error('No wallets found');
+            }
             return ipcResponseSuccess(wallets.map((wallet) => wallet.toInterface()));
         } catch (error: any) {
             return ipcResponseError(error.message);
         }
     });
-    
-    ipcMain.handle('update-wallet', async (_, id, title, balance): Promise<IPCResponse<IWallet| any>> => {
+
+    ipcMain.handle('update-wallet', async (_, id, title, balance): Promise<IPCResponse<IWallet | any>> => {
         try {
             const wallet = await Wallet.findOne(id);
             if (wallet) {
@@ -40,7 +43,7 @@ export function registerDbWalletsIPCHandler(){
             return ipcResponseError(error.message);
         }
     });
-    
+
     ipcMain.handle('delete-wallet', async (_, id): Promise<IPCResponse<any>> => {
         try {
             const wallet = await Wallet.findOne(id);
