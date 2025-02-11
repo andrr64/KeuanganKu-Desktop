@@ -19,6 +19,7 @@ const createWindow = (): void => {
             preload: getPreloadPath()
         }
     });
+    mainWindow.setMenuBarVisibility(false);
     mainWindow.maximize(); // Add this line to maximize the window
     if (isDev()) {
         mainWindow.loadURL('http://localhost:8000');
