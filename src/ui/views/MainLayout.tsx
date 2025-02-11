@@ -16,8 +16,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useAlert } from './alert/AlertContext';
-import Homepage from './main-contents/Home';
-import WalletPage from './main-contents/Wallet';
+import Homepage from './main-contents/home/Home';
+import WalletPage from './main-contents/wallet/Wallet';
 
 // Buat tema kustom
 const theme = createTheme({
@@ -126,7 +126,7 @@ function MainLayout() {
                         </List>
                     </Box>
                 </StyledDrawer>
-                <div style={{width: '100%', backgroundColor: 'white'}}>
+                <div style={{width: '100%', backgroundColor: '#FAFAFA'}}>
                     {drawerItems[selectedIndex].content}
                 </div>
             </Box>

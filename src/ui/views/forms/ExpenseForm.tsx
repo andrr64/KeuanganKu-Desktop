@@ -6,7 +6,6 @@ import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
 import { WalletInterface } from '../../interfaces/wallet';
 import { waitMs } from '../../util';
-import { IPCResponse } from '../../interfaces/ipc_response';
 
 interface ExpenseFormInterface {
     title: string;
