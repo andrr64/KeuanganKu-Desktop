@@ -5,6 +5,7 @@ import { ExpenseCategoryInterface } from "./ui/interfaces/expense_category";
 import { IPCResponse } from "./ui/interfaces/ipc_response";
 import { IncomeFormInterface } from "./ui/interfaces/income_form";
 import { ExpenseFormInterface } from "./ui/interfaces/expense_form";
+import { GetExpenseProp } from "./ui/interfaces/get_expense";
 
 declare global {
     interface Window {
@@ -12,7 +13,8 @@ declare global {
             getExpenseCategories: () => Promise<IPCResponse<ExpenseCategoryInterface[]>>,
         };
         db_expenses: {
-            addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>
+            addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>,
+            getExpenses: (request: GetExpenseProp) => Promise<IPCResponse<ExpenseInterface[]>>
         },
         db_income_categories: {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>,
@@ -30,4 +32,4 @@ declare global {
     }
 }
 
-export {}; // Penting agar ini dianggap sebagai modul dan tidak menimpa deklarasi global
+export { }; // Penting agar ini dianggap sebagai modul dan tidak menimpa deklarasi global
