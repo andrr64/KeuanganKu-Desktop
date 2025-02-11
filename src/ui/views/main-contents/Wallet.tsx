@@ -59,16 +59,21 @@ function WalletPage() {
           <Box sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '20px'
+            gap: '15px'
           }}>
             <Typography variant="h4" fontWeight="bold">
               Wallets
             </Typography>
-            <CustomDropdown/>
+            <Box sx={{ display: 'grid', gap: '20px', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <Button onClick={(_) => {setOpenIncomeForm(true)}} sx={{fontSize: '12px', bgcolor: '#3A976C', color: 'white'}}>Income</Button>
+              <Button onClick={(_) => {setOpenExpenseForm(true)}} sx={{fontSize: '12px', bgcolor: '#9C3436', color: 'white'}}>Expense</Button>
+              <Button onClick={(_) => {setOpenWalletForm(true)}} sx={{fontSize: '12px', bgcolor: '#1B4272', color: 'white'}}>Wallet</Button>
+            </Box>
+            <CustomDropdown />
             <Box sx={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '10px'
+              gap: '15px'
             }}>
               {wallets.map((wallet, index) => (
                 <WalletCard
@@ -81,11 +86,11 @@ function WalletPage() {
             </Box>
           </Box>
 
-          <Divider sx={{bgcolor: '#E8F2FF'}} orientation="vertical" flexItem />
+          <Divider sx={{ bgcolor: '#E8F2FF' }} orientation="vertical" flexItem />
 
           {/* Second Column (7/12) */}
           <Box>
-            <Typography sx={{color: 'inherit'}} variant="h4" fontWeight="bold">
+            <Typography sx={{ color: 'inherit' }} variant="h4" fontWeight="bold">
               Summary
             </Typography>
             {/* Tambahin konten di sini */}

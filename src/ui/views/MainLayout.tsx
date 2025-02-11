@@ -126,7 +126,7 @@ function MainLayout() {
                         </List>
                     </Box>
                 </StyledDrawer>
-                <div style={{ padding: "20px", width: '100%', backgroundColor: 'white'}}>
+                <div style={{width: '100%', backgroundColor: 'white'}}>
                     {drawerItems[selectedIndex].content}
                 </div>
             </Box>
