@@ -13,7 +13,7 @@ type WalletCardProps = {
 const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, active }) => {
   const activeBgColor = '#1B4272';
 
-  const StyledCard = styled(Card)(({ theme }) => ({
+  const StyledCard = styled(Card)(({}) => ({
     width: '100%',
     height: 70,
     position: "relative",

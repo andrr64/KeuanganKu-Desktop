@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MenuItem, Select, Box } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 
 const CustomDropdown: React.FC = () => {
   const [value, setValue] = useState("Most Valuable");

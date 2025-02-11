@@ -46,7 +46,6 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
             const response = await window.db_wallets.addWallet(formData.title, formData.balance);
             setLoading(false);
             if (response.success) {
-                const newWallet = response.data; ///TODO: handle new wallet
                 showAlert("success", "Wallet has been successfully added");
                 whenIconCloseFire();
             } else {

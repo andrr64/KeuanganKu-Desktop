@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, IconButton } from '@mui/material';
-import { Close, SelectAllOutlined } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
