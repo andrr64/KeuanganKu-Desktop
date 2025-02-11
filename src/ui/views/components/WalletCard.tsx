@@ -10,15 +10,12 @@ type WalletCardProps = {
   active: boolean
 };
 
-
-
-
 const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, active }) => {
-  const activeBgColor = '#2563BA';
+  const activeBgColor = '#1B4272';
 
   const StyledCard = styled(Card)(({ theme }) => ({
-    width: 290,
-    height: 69,
+    width: '100%',
+    height: 70,
     position: "relative",
     borderRadius: 5,
     backgroundColor: active ? activeBgColor : "#EDF4FF",
@@ -28,7 +25,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, 
     border: "1px solid #C2DBFF",
     transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
     "&:hover": {
-      backgroundColor: active ? activeBgColor : "#A4C7FA",
+      backgroundColor: active ? activeBgColor : "#BACFEE",
     },
   }));
 
@@ -46,7 +43,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, 
             position: "absolute",
             left: 67,
             top: 17,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: "700",
             wordWrap: "break-word",
             color: "inherit", // Mengikuti warna dari CardContent
@@ -59,7 +56,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, 
             position: "absolute",
             left: 67,
             top: 35,
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: "400",
             wordWrap: "break-word",
             color: "inherit", // Mengikuti warna dari CardContent

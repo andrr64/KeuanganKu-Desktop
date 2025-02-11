@@ -23,7 +23,7 @@ import WalletPage from './main-contents/Wallet';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#1976d2', // Warna biru modern
+            main: '#1B4272', // Warna biru modern
         },
         secondary: {
             main: '#dc004e', // Warna aksen merah muda
@@ -126,7 +126,7 @@ function MainLayout() {
                         </List>
                     </Box>
                 </StyledDrawer>
-                <div style={{ padding: "20px", backgroundColor: 'white'}}>
+                <div style={{ padding: "20px", width: '100%', backgroundColor: 'white'}}>
                     {drawerItems[selectedIndex].content}
                 </div>
             </Box>

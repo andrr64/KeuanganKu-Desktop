@@ -1,4 +1,4 @@
-import { Button, useMediaQuery, Box, Stack, Typography } from '@mui/material';
+import { Button, useMediaQuery, Box, Stack, Typography, Divider } from '@mui/material';
 import { MainContent } from '../MainLayout';
 import ModalContainer from '../modals/ModalContainer';
 import { useState, useEffect } from 'react';
@@ -10,6 +10,7 @@ import WalletCard from '../components/WalletCard';
 import AddIcon from '@mui/icons-material/Add'; // Import icon untuk tombol
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Import icon untuk income
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'; // Import icon untuk expense
+import CustomDropdown from '../components/Dropdown';
 
 
 
@@ -44,84 +45,51 @@ function WalletPage() {
       <ModalContainer open={openWalletForm}> {/* Modal for WalletForm */}
         <WalletForm whenIconCloseFire={() => setOpenWalletForm(false)} />
       </ModalContainer>
-      <MainContent sx={{backgroundColor:'inherit'}}>
-        {/* Tombol dengan tata letak responsif */}
-        <Box sx={{ marginBottom: '24px' }}>
-          <Stack
-            direction={isSmallScreen ? 'column' : 'row'} // Tumpuk vertikal pada layar kecil
-            spacing={2} // Jarak antara tombol
-          >
-            <Button
-              variant="contained"
-              startIcon={<AttachMoneyIcon />} // Ikon untuk income
-              onClick={() => setOpenIncomeForm(true)}
-              sx={{
-                backgroundColor: '#4caf50', // Warna hijau
-                '&:hover': {
-                  backgroundColor: '#388e3c', // Warna hijau lebih gelap saat hover
-                },
-                padding: '10px 20px',
-                borderRadius: '8px',
-                textTransform: 'none', // Menghilangkan uppercase
-                fontSize: '16px',
-                width: isSmallScreen ? '100%' : 'auto', // Lebar penuh pada layar kecil
-              }}
-            >
-              Add Income
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<MoneyOffIcon />} // Ikon untuk expense
-              onClick={() => setOpenExpenseForm(true)}
-              sx={{
-                backgroundColor: '#f44336', // Warna merah
-                '&:hover': {
-                  backgroundColor: '#d32f2f', // Warna merah lebih gelap saat hover
-                },
-                padding: '10px 20px',
-                borderRadius: '8px',
-                textTransform: 'none', // Menghilangkan uppercase
-                fontSize: '16px',
-                width: isSmallScreen ? '100%' : 'auto', // Lebar penuh pada layar kecil
-              }}
-            >
-              Add Expense
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />} // Ikon untuk wallet
-              onClick={() => setOpenWalletForm(true)}
-              sx={{
-                backgroundColor: '#2196f3', // Warna biru
-                '&:hover': {
-                  backgroundColor: '#1976d2', // Warna biru lebih gelap saat hover
-                },
-                padding: '10px 20px',
-                borderRadius: '8px',
-                textTransform: 'none', // Menghilangkan uppercase
-                fontSize: '16px',
-                width: isSmallScreen ? '100%' : 'auto', // Lebar penuh pada layar kecil
-              }}
-            >
-              Add Wallet
-            </Button>
-          </Stack>
-        </Box>
-
-        {/* Daftar WalletCard */}
+      <MainContent sx={{ backgroundColor: 'inherit' }}>
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: isSmallScreen ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))', // Responsive grid
-            gap: '16px', // Jarak antara card
+            display: "grid",
+            gridTemplateColumns: "3fr auto  7fr", // 5/12 & 7/12
+            gap: "16px",
+            width: "100%",
+            minHeight: '100vh'
           }}
         >
-          <Typography variant='h5' fontWeight={'semibold'}>
-            Wallets
-          </Typography>
-          {wallets.map((wallet, index) => (
-            <WalletCard active={index == activeWallet} onClick={() => setActiveWallet(index)} key={wallet.id} wallet={wallet} />
-          ))}
+          {/* Wallets List (5/12) */}
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}>
+            <Typography variant="h4" fontWeight="bold">
+              Wallets
+            </Typography>
+            <CustomDropdown/>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              {wallets.map((wallet, index) => (
+                <WalletCard
+                  active={index == activeWallet}
+                  onClick={() => setActiveWallet(index)}
+                  key={wallet.id}
+                  wallet={wallet}
+                />
+              ))}
+            </Box>
+          </Box>
+
+          <Divider sx={{bgcolor: '#E8F2FF'}} orientation="vertical" flexItem />
+
+          {/* Second Column (7/12) */}
+          <Box>
+            <Typography sx={{color: 'inherit'}} variant="h4" fontWeight="bold">
+              Summary
+            </Typography>
+            {/* Tambahin konten di sini */}
+          </Box>
         </Box>
       </MainContent>
     </>
