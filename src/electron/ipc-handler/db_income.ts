@@ -9,7 +9,6 @@ export function registerDBIncomeIPCHandler() {
     ipcMain.handle('add-income', async (_, data: IncomeFormInterface) => {
         const queryRunner = AppDataSource.createQueryRunner();
         await queryRunner.startTransaction();
-        console.log('OK, add income...');
         try {
             const wallet = await queryRunner.manager.findOneBy(Wallet, { id: data.wallet_id });
             if (!wallet) {
@@ -30,7 +29,6 @@ export function registerDBIncomeIPCHandler() {
             await queryRunner.commitTransaction();
             return ipcResponseSuccess(income.toInterface());
         } catch (error: any) {
-            console.log(error.message);
             await queryRunner.rollbackTransaction();
             return ipcResponseError(error.message);
         } finally {

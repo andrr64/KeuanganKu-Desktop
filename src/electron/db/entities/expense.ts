@@ -11,16 +11,14 @@ class Expense extends BaseEntity {
   @Column({ type: 'decimal', precision: 24, scale: 2, nullable: false })
   public amount!: number;
 
-  @Column({ type: 'date', nullable: false })
-  public date!: Date;
-
-  @ManyToOne(() => ExpenseCategory)
+  @ManyToOne(() => ExpenseCategory, { eager: true }) // Tambahkan eager agar otomatis di-load
   @JoinColumn({ name: 'categoryId' })
-  public categoryId!: number;
-
-  @ManyToOne(() => Wallet)
+  public category!: ExpenseCategory;
+  
+  @ManyToOne(() => Wallet, { eager: true }) 
   @JoinColumn({ name: 'walletId' })
-  public walletId!: number;
+  public wallet!: Wallet;
+  
 
   @Column({ type: 'text', nullable: false })
   public title!: string;
@@ -38,15 +36,15 @@ class Expense extends BaseEntity {
     return {
       id: this.id,
       amount: this.amount,
-      date: this.date,
-      categoryId: this.categoryId,
-      walletId: this.walletId,
+      categoryId: this.category?.id ?? null, // Ambil ID dari relasi
+      walletId: this.wallet?.id ?? null, 
       title: this.title,
       description: this.description,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
   }
+  
 }
 
 export default Expense;

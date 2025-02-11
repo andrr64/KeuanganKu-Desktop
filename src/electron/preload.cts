@@ -32,6 +32,9 @@ electron.contextBridge.exposeInMainWorld(database.incomes, {
 electron.contextBridge.exposeInMainWorld(database.expenses, {
     addExpense: (data: {title: string, description?: string, amount: number, category_id: number, wallet_id: number}) => {
         return electron.ipcRenderer.invoke("add-expense", data);
+    },
+    getExpenses: (data: {wallet_id: number, rangeType: string, startDate?: Date, endDate?: Date}) => {
+        return electron.ipcRenderer.invoke("get-expenses", data);
     }
 });
 
