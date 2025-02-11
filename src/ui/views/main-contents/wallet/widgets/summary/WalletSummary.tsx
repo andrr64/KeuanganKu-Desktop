@@ -85,7 +85,8 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
             <Card sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <Typography variant="h6" fontWeight={700}>Recent Expenses</Typography>
-                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
+                    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
+                        <CustomDropdown />
                         <CustomDropdown />
                         <CustomDropdown />
                         <CustomDropdown />

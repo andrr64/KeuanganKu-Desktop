@@ -15,14 +15,18 @@ function WalletPage() {
   const [openWalletForm, setOpenWalletForm] = useState(false);
   const [wallets, setWallets] = useState<WalletInterface[]>([]);
   const [activeWallet, setActiveWallet] = useState<number>(0);
+  const [totalBalance, setTotalBalance] = useState<number | null>(0);
+
+
+  const fetchWallets = async () => {
+    const response = await window.db_wallets.getWallets();
+    if (response.success) {
+      setWallets(response.data);
+      setTotalBalance(response.data.reduce((acc, wallet) => acc + wallet.balance, 0));
+    }
+  }
 
   useEffect(() => {
-    async function fetchWallets() {
-      const response = await window.db_wallets.getWallets();
-      if (response.success) {
-        setWallets(response.data);
-      }
-    }
     fetchWallets();
   }, []);
 
@@ -53,6 +57,7 @@ function WalletPage() {
             openWalletForm={setOpenWalletForm}
             activeWallet={activeWallet}
             wallets={wallets}
+            totalBalance={totalBalance}
             setActiveWallet={setActiveWallet}
           />
           <Divider sx={{ bgcolor: '#E8F2FF' }} orientation="vertical" flexItem />

@@ -4,6 +4,7 @@ import WalletCard from '../../../../components/WalletCard'
 import { WalletInterface } from '../../../../../interfaces/wallet';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add'
+import { formatCurrency } from '../../../../util/number_formater';
 
 interface WXListWalletProps {
   openIncomeForm: (arg0: boolean) => void;
@@ -12,18 +13,26 @@ interface WXListWalletProps {
   setActiveWallet: (arg0: number) => void;
   wallets: WalletInterface[];
   activeWallet: number;
+  totalBalance: number | null;
 }
 
-const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpenseForm, openWalletForm, activeWallet, wallets, setActiveWallet }) => {
+const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpenseForm, openWalletForm, activeWallet, wallets, setActiveWallet, totalBalance }) => {
   return (
     <Box sx={{
       display: 'flex',
       flexDirection: 'column',
       gap: '15px'
     }}>
-      <Typography variant="h5" fontWeight="bold">
-        Wallets
-      </Typography>
+      <Box>
+        <Typography variant="h4" fontWeight="bold" color='text.primary'>
+          Wallets
+        </Typography>
+        <Typography variant="h6">
+          {totalBalance !== null && (
+            formatCurrency(totalBalance)
+          )}
+        </Typography>
+      </Box>
       <Box sx={{ display: 'grid', gap: '10px', gridTemplateColumns: '1fr 1fr 1fr' }}>
         <Button
           onClick={(_) => openIncomeForm(true)}
