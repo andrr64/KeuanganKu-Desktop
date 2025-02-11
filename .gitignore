@@ -25,3 +25,9 @@ dist-ssr
 
 dist-*
 *.db
+*.sqlite
+*.sqlite3
+*.sql
+*.log
+
+db_code
