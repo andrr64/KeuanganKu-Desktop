@@ -11,11 +11,14 @@ import AddIcon from '@mui/icons-material/Add'; // Import icon untuk tombol
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Import icon untuk income
 import MoneyOffIcon from '@mui/icons-material/MoneyOff'; // Import icon untuk expense
 
+
+
 function WalletPage() {
   const [openIncomeForm, setOpenIncomeForm] = useState(false);
   const [openExpenseForm, setOpenExpenseForm] = useState(false);
   const [openWalletForm, setOpenWalletForm] = useState(false); // State for WalletForm
   const [wallets, setWallets] = useState<WalletInterface[]>([]); // State for wallets
+  const [activeWallet, setActiveWallet] = useState<number>(0);
 
   // Cek ukuran layar
   const isSmallScreen = useMediaQuery('(max-width:600px)');
@@ -116,8 +119,8 @@ function WalletPage() {
           <Typography variant='h5' fontWeight={'semibold'}>
             Wallets
           </Typography>
-          {wallets.map((wallet) => (
-            <WalletCard key={wallet.id} wallet={wallet} />
+          {wallets.map((wallet, index) => (
+            <WalletCard active={index == activeWallet} onClick={() => setActiveWallet(index)} key={wallet.id} wallet={wallet} />
           ))}
         </Box>
       </MainContent>

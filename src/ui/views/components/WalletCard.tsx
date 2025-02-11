@@ -6,36 +6,43 @@ import { styled } from "@mui/material/styles";
 
 type WalletCardProps = {
   wallet: WalletInterface;
+  onClick: () => void;
+  active: boolean
 };
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  width: 290,
-  height: 69,
-  position: "relative",
-  borderRadius: 5,
-  backgroundColor: "#EDF4FF",
-  boxShadow: 'none',
-  cursor: 'pointer',
-  border: "1px solid #C2DBFF",
-  transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
-  "&:hover": {
-    backgroundColor: "#A4C7FA",
-    
-  },
-}));
 
-const WalletCard: React.FC<WalletCardProps> = ({ wallet }) => {
+
+
+const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, active }) => {
+  const activeBgColor = '#2563BA';
+
+  const StyledCard = styled(Card)(({ theme }) => ({
+    width: 290,
+    height: 69,
+    position: "relative",
+    borderRadius: 5,
+    backgroundColor: active ? activeBgColor : "#EDF4FF",
+    boxShadow: 'none',
+    color: active? 'white' : '#2B4A75',
+    cursor: 'pointer',
+    border: "1px solid #C2DBFF",
+    transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
+    "&:hover": {
+      backgroundColor: active ? activeBgColor : "#A4C7FA",
+    },
+  }));
+
   return (
-    <StyledCard>
+    <StyledCard onClick={eventOnClick}>
       <CardContent
         sx={{
           position: "relative",
           padding: 0,
-          color: "inherit", // Mengikuti perubahan warna dari StyledCard
+          color: "inherit",
         }}
       >
         <Box
-          sx={{ 
+          sx={{
             position: "absolute",
             left: 67,
             top: 17,
