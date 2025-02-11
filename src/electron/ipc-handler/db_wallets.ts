@@ -57,4 +57,14 @@ export function registerDbWalletsIPCHandler() {
             return ipcResponseError(error.message);
         }
     });
+
+    ipcMain.handle('get-total-balance', async (_): Promise<IPCResponse<number | null>> => {
+        try {
+            const wallets = await Wallet.find();
+            const totalBalance = wallets.reduce((acc, wallet) => acc + wallet.balance, 0);
+            return ipcResponseSuccess(totalBalance);
+        } catch (error: any) {
+            return ipcResponseError(error.message);
+        }
+    });
 }

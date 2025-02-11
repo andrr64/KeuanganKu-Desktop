@@ -25,6 +25,7 @@ declare global {
         db_wallets: {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
+            getTotalBalances: () => Promise<IPCResponse<number | null>>;
         };
         app_sys: {
             quitApp: () => Promise<void>;
