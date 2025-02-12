@@ -12,7 +12,9 @@ interface ExpenseFormInterface {
     description: string;
     amount: number;
     category_id: number;
-    wallet_id: number; // Add this line
+    wallet_id: number;
+    date: string;
+    time: string; // Add this line
 }
 
 interface ExpenseFormUIProps {
@@ -27,7 +29,9 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
         description: '',
         amount: 0,
         category_id: -1,
-        wallet_id: -1, // Add this line
+        wallet_id: -1,
+        date: '',
+        time: '', // Add this line
     });
     const [categories, setCategories] = React.useState<ExpenseCategoryInterface[]>([]);
     const [wallets, setWallets] = React.useState<WalletInterface[]>([]);
@@ -60,7 +64,10 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
             }
             setLoading(true);
             waitMs(200);
-            const response = await window.db_expenses.addExpense(formData);
+            const response = await window.db_expenses.addExpense({
+                ...formData,
+                ///TODO: Combine date and time
+            });
             if (response.success) {
                 showAlert("success", "Expense added successfully");
             } else {
@@ -97,6 +104,12 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
 
     const initData = async () => {
         try {
+            const now = new Date();
+            setFormData({
+                ...formData,
+                date: now.toISOString().split('T')[0],
+                time: now.toTimeString().split(' ')[0].slice(0, 5),
+            });
             await initWallets();
             await initCategories();
         } catch (error: any) {
@@ -173,6 +186,46 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
                     required
                     fullWidth
                 />
+                <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: 2, alignItems: 'center' }}>
+                    <TextField
+                        label="Date"
+                        name="date"
+                        type="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    <TextField
+                        label="Time"
+                        name="time"
+                        type="time"
+                        value={formData.time}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            const now = new Date();
+                            setFormData({
+                                ...formData,
+                                date: now.toISOString().split('T')[0],
+                                time: now.toTimeString().split(' ')[0].slice(0, 5),
+                            });
+                        }}
+                    >
+                        Now
+                    </Button>
+                </Box>
+
                 <FormControl fullWidth required>
                     <InputLabel id="category-label">Category</InputLabel>
                     <Select

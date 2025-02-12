@@ -4,6 +4,7 @@ import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { waitMs } from '../../util';
+import { WalletInterface } from '../../interfaces/wallet';
 
 interface WalletFormProps {
     title: string;
@@ -11,10 +12,11 @@ interface WalletFormProps {
 }
 
 interface WalletFormUIProps {
+    handleNewWallet: (wallet: WalletInterface) => void;
     whenIconCloseFire: () => void;
 }
 
-const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
+const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire, handleNewWallet}) => {
     const [loading, setLoading] = React.useState(false);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<WalletFormProps>({
@@ -47,6 +49,7 @@ const WalletForm: React.FC<WalletFormUIProps> = ({ whenIconCloseFire }) => {
             setLoading(false);
             if (response.success) {
                 showAlert("success", "Wallet has been successfully added");
+                handleNewWallet(response.data!);
                 whenIconCloseFire();
             } else {
                 showAlert("error", response.message);

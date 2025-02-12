@@ -1,15 +1,15 @@
 import React from "react";
 import { WalletInterface } from "../../interfaces/wallet";
 import { formatCurrency } from "../util/number_formater";
-import { Box, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent, IconButton, Menu, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type WalletCardProps = {
   wallet: WalletInterface;
   onClick: () => void;
   active: boolean
 };
-
 const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, active }) => {
   const activeBgColor = '#1B4272';
 
@@ -84,6 +84,11 @@ const WalletCard: React.FC<WalletCardProps> = ({ wallet, onClick: eventOnClick, 
               </clipPath>
             </defs>
           </svg>
+        </div>
+        <div data-svg-wrapper style={{ right: 14, top: 11, position: "absolute" }}>
+          <IconButton sx={{color: 'inherit'}} size="small">
+            <MoreVertIcon />
+          </IconButton>
         </div>
       </CardContent>
     </StyledCard>

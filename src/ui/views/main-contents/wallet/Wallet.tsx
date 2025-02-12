@@ -18,6 +18,10 @@ function WalletPage() {
   const [totalBalance, setTotalBalance] = useState<number | null>(0);
 
 
+  const handleNewWallet = async (wallet: WalletInterface) => {
+    setWallets([...wallets, wallet]);
+  }
+
   const fetchWallets = async () => {
     const response = await window.db_wallets.getWallets();
     if (response.success) {
@@ -39,7 +43,7 @@ function WalletPage() {
         <ExpenseForm whenIconCloseFire={() => setOpenExpenseForm(false)} />
       </ModalContainer>
       <ModalContainer open={openWalletForm}>
-        <WalletForm whenIconCloseFire={() => setOpenWalletForm(false)} />
+        <WalletForm handleNewWallet={handleNewWallet} whenIconCloseFire={() => setOpenWalletForm(false)} />
       </ModalContainer>
       <MainContent sx={{ backgroundColor: 'inherit' }}>
         <Box

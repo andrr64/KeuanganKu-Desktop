@@ -27,7 +27,7 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
         <Typography variant="h4" fontWeight="bold" color='text.primary'>
           Wallets
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="h5">
           {totalBalance !== null && (
             formatCurrency(totalBalance)
           )}

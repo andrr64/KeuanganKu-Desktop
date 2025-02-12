@@ -5,6 +5,8 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { WalletInterface } from '../../../../../interfaces/wallet';
 import React, { useEffect, useState } from 'react';
 import { ExpenseInterface } from '../../../../../interfaces/expense';
+import { formatDate } from '../../../../util/date_formater';
+import { formatCurrency } from '../../../../util/number_formater';
 
 interface WXWalletSummaryProps {
     wallet: WalletInterface;
@@ -46,9 +48,6 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <Typography sx={{ color: 'inherit' }} variant="h5" fontWeight="bold">
-                Summary
-            </Typography>
             <Box sx={{ width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
                 <Card sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -102,12 +101,13 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <Box>
                                         <Typography variant="h6" fontWeight={700}>{expense.title}</Typography>
+                                        <Typography variant='body2'>{formatDate(expense.createdAt)}</Typography>
                                         <Typography variant="body2" color="text.secondary">
                                             {expense.description}
                                         </Typography>
                                     </Box>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {expense.amount}
+                                    <Typography variant="body1" color="text.primary">
+                                        {formatCurrency(expense.amount)}
                                     </Typography>
                                 </CardContent>
                             </Card>
