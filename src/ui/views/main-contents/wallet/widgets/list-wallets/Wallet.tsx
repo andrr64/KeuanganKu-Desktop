@@ -6,6 +6,7 @@ import React from 'react';
 import AddIcon from '@mui/icons-material/Add'
 import { formatCurrency } from '../../../../util/number_formater';
 import { More } from '@mui/icons-material';
+import { useAlert } from '../../../../alert/AlertContext';
 
 interface WXListWalletProps {
   openIncomeForm: (arg0: boolean) => void;
@@ -19,14 +20,8 @@ interface WXListWalletProps {
 
 const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpenseForm, openWalletForm, activeWallet, wallets, setActiveWallet, totalBalance }) => {
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { showAlert, showQuestion } = useAlert();
+
   return (
     <Box sx={{
       display: 'flex',
@@ -76,6 +71,17 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
           <WalletCard
             active={index == activeWallet}
             onClick={() => setActiveWallet(index)}
+            handleEdit={(wallet) => { }}
+            handleDelete={(wallet) => {
+              showQuestion('Delete Wallet', 'Are you sure you want to delete this wallet?', async () => {
+                const response = await window.db_wallets.deleteWallet(wallet.id);
+                if (response.success) {
+                  showAlert('success', 'Wallet deleted successfully');
+                } else {
+                  showAlert('error', response.message);
+                }
+              });
+            }}
             key={wallet.id}
             wallet={wallet}
           />

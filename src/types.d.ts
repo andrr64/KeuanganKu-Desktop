@@ -26,6 +26,7 @@ declare global {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
             getTotalBalances: () => Promise<IPCResponse<number | null>>;
+            deleteWallet: (id: number) => Promise<IPCResponse<boolean>>;
         };
         app_sys: {
             quitApp: () => Promise<void>;
