@@ -1,7 +1,20 @@
-import { Box, Paper, Typography } from "@mui/material"
+import { Box, IconButton, Paper, Typography, Menu, MenuItem } from "@mui/material"
 import { MainContent } from "../../MainLayout"
+import React from "react";
+import { MoreVert, MoreVertOutlined } from "@mui/icons-material";
 
 function Homepage() {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <MainContent sx={{backgroundColor: 'inherit'}}>
             <Typography variant="h4" gutterBottom>
@@ -26,6 +39,18 @@ function Homepage() {
                             Kartu ini juga memiliki efek hover yang modern.
                         </Typography>
                     </Paper>
+                    <IconButton onClick={handleClick}>
+                        <MoreVertOutlined/>
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={handleClose}>Menu 1</MenuItem>
+                        <MenuItem onClick={handleClose}>Menu 2</MenuItem>
+                        <MenuItem onClick={handleClose}>Menu 3</MenuItem>
+                    </Menu>
                 </Box>
 
                 {/* Kartu 3 */}
