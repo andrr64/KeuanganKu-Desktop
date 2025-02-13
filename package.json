@@ -2,7 +2,8 @@
     "name": "keuanganku-desktop",
     "author": {
         "name": "Derza Andreas",
-        "email": "andrrbussines15@gmail.com"},
+        "email": "andrrbussines15@gmail.com"
+    },
     "description": "Aplikasi keuangan sederhana menggunakan Electron dan React",
     "private": true,
     "version": "0.0.0",
