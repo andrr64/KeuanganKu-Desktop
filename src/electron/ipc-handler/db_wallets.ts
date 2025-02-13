@@ -7,6 +7,7 @@ import Income from '../db/entities/income.js';
 import { ExpenseInterface } from '../db/interfaces/expense.js';
 import AppDataSource from '../db/config/ormconfig.js';
 import IncomeCategory from '../db/entities/income_category.js';
+import { IncomeInterface } from '../db/interfaces/income.js';
 
 export function registerDbWalletsIPCHandler() {
     ipcMain.handle('add-wallet', async (_, title, balance): Promise<IPCResponse<WalletInterface | null>> => {
@@ -129,7 +130,7 @@ export function registerDbWalletsIPCHandler() {
             const formattedData = transactions.map(transaction => transaction.toInterface());
 
             // Return the success response with the formatted data
-            return ipcResponseSuccess<ExpenseInterface[]>(formattedData);
+            return ipcResponseSuccess<ExpenseInterface[] | IncomeInterface[]>(formattedData);
         } catch (error: any) {
             // Return the error response if something goes wrong
             return ipcResponseError(error.message);

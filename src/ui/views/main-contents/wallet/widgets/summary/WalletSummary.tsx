@@ -7,21 +7,22 @@ import React, { useEffect, useState } from 'react';
 import { ExpenseInterface } from '../../../../../interfaces/entities/expense';
 import { formatDate } from '../../../../util/date_formater';
 import { formatCurrency } from '../../../../util/number_formater';
+import { IncomeInterface } from '../../../../../interfaces/entities/income';
 
 interface WXWalletSummaryProps {
     wallet: WalletInterface;
 }
 
 const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
-    const [expenses, setExpenses] = useState<ExpenseInterface[]>([]);
-
+    const [transactions, setTransactions] = useState<ExpenseInterface[] | IncomeInterface[]>([]);
+    
     useEffect(() => {
         async function fetchExpenseData() {
             if (!wallet) return;
 
-            const response = await window.db_expenses.getExpenses({ walletId: wallet.id });
-            if (response.success) {
-                setExpenses(response.data);
+            const response = await window.db_wallets.getTransactions(wallet.id);
+            if (response.success){
+                setTransactions(response.data);
             }
         }
         fetchExpenseData();
@@ -83,7 +84,7 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
             </Box>
             <Card sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <Typography variant="h6" fontWeight={700}>Recent Expenses</Typography>
+                    <Typography variant="h6" fontWeight={700}>Transactions</Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
                         <CustomDropdown />
                         <CustomDropdown />
@@ -91,23 +92,23 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                         <CustomDropdown />
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        {expenses.length === 0 && (
+                        {transactions.length === 0 && (
                             <Typography variant="body2" color="text.secondary">
-                                No expenses found.
+                                No transactions found.
                             </Typography>
                         )}
-                        {expenses.map((expense) => (
-                            <Card key={expense.id} sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
+                        {transactions.map((transaction) => (
+                            <Card key={transaction.id} sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
                                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <Box>
-                                        <Typography variant="h6" fontWeight={700}>{expense.title}</Typography>
-                                        <Typography variant='body2'>{formatDate(expense.createdAt)}</Typography>
+                                        <Typography variant="h6" fontWeight={700}>{transaction.title}</Typography>
+                                        <Typography variant='body2'>{formatDate(transaction.createdAt)}</Typography>
                                         <Typography variant="body2" color="text.secondary">
-                                            {expense.description}
+                                            {transaction.description}
                                         </Typography>
                                     </Box>
                                     <Typography variant="body1" color="text.primary">
-                                        {formatCurrency(expense.amount)}
+                                        {formatCurrency(transaction.amount)}
                                     </Typography>
                                 </CardContent>
                             </Card>
