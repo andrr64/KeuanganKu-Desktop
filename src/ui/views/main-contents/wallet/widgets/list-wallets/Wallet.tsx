@@ -1,11 +1,12 @@
-import { Box, Button,   Typography } from '@mui/material'
-import CustomDropdown from '../../../../components/Dropdown'
+import { Box, Button, Divider, Typography } from '@mui/material'
 import WalletCard from '../../../../components/WalletCard'
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add'
 import { formatCurrency } from '../../../../util/number_formater';
 import { useAlert } from '../../../../alert/AlertContext';
 import { WalletInterface } from '../../../../../interfaces/entities/wallet';
+import CustomDropdown from '../../../../components/Dropdown';
+import { EnumSortWalletsBy, sortWalletsByDropdownItems } from '../../../../../enums/sort_wallets';
 
 interface WXListWalletProps {
   openIncomeForm: (arg0: boolean) => void;
@@ -15,9 +16,11 @@ interface WXListWalletProps {
   wallets: WalletInterface[];
   activeWallet: number;
   totalBalance: number | null;
+  sortWalletValue: EnumSortWalletsBy;
+  setSortValue: (arg0: EnumSortWalletsBy) => void;
 }
 
-const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpenseForm, openWalletForm, activeWallet, wallets, setActiveWallet, totalBalance }) => {
+const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpenseForm, openWalletForm, activeWallet, wallets, setActiveWallet, totalBalance, sortWalletValue, setSortValue }) => {
 
   const { showAlert, showQuestion } = useAlert();
 
@@ -37,7 +40,8 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
           )}
         </Typography>
       </Box>
-      <Box sx={{ display: 'flex', gap: '5px', flexDirection: 'column'}}>
+      <Divider />
+      <Box sx={{ display: 'flex', gap: '5px', flexDirection: 'column' }}>
         <Button
           onClick={(_) => openIncomeForm(true)}
           startIcon={<AddIcon />}
@@ -60,7 +64,9 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
           Wallet
         </Button>
       </Box>
-      <CustomDropdown />
+      <Divider />
+      <Typography variant={'body1'} fontWeight={600}>Sort Wallets</Typography>
+      <CustomDropdown items={sortWalletsByDropdownItems} value={sortWalletValue} onChange={setSortValue} />
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',

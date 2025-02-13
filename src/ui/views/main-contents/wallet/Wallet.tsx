@@ -8,6 +8,7 @@ import WalletForm from "../../forms/WalletForm";
 import WXWalletSummary from "./widgets/summary/WalletSummary";
 import WXListWallet from "./widgets/list-wallets/Wallet";
 import { MainContent } from "../../MainLayout";
+import { EnumSortWalletsBy } from "../../../enums/sort_wallets";
 
 function WalletPage() {
   const [openIncomeForm, setOpenIncomeForm] = useState(false);
@@ -16,14 +17,14 @@ function WalletPage() {
   const [wallets, setWallets] = useState<WalletInterface[]>([]);
   const [activeWallet, setActiveWallet] = useState<number>(0);
   const [totalBalance, setTotalBalance] = useState<number | null>(0);
-
+  const [sortWalletVal, setSortWalletValue] = useState<EnumSortWalletsBy>(EnumSortWalletsBy.Alphabetic_ASC);
 
   const handleNewWallet = async (wallet: WalletInterface) => {
     setWallets([...wallets, wallet]);
   }
 
   const fetchWallets = async () => {
-    const response = await window.db_wallets.getWallets();
+    const response = await window.db_wallets.getWalletsBySort(sortWalletVal);
     if (response.success) {
       setWallets(response.data);
       setTotalBalance(response.data.reduce((acc, wallet) => acc + wallet.balance, 0));
@@ -32,7 +33,7 @@ function WalletPage() {
 
   useEffect(() => {
     fetchWallets();
-  }, []);
+  }, [sortWalletVal]);
 
   return (
     <>
@@ -60,6 +61,8 @@ function WalletPage() {
             openExpenseForm={setOpenExpenseForm}
             openWalletForm={setOpenWalletForm}
             activeWallet={activeWallet}
+            sortWalletValue={sortWalletVal}
+            setSortValue={setSortWalletValue}
             wallets={wallets}
             totalBalance={totalBalance}
             setActiveWallet={setActiveWallet}

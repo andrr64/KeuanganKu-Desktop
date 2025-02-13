@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { MenuItem, Select } from "@mui/material";
+import React from "react";
+import {MenuItem, Select, Typography } from "@mui/material";
 
-const CustomDropdown: React.FC = () => {
-  const [value, setValue] = useState("Most Valuable");
+export interface DropdownItemInterface<T> {
+  value: T;
+  label: string;
+}
 
+interface CustomDropdownProps<T> {
+  items: DropdownItemInterface<T>[];
+  value: T;
+  onChange: (value: T) => void;
+}
+
+const CustomDropdown: React.FC<CustomDropdownProps<any>> = ({ value, items, onChange }) => {
   return (
     <Select
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => onChange(e.target.value as string)}
       displayEmpty
       sx={{
         height: 32,
@@ -28,9 +37,13 @@ const CustomDropdown: React.FC = () => {
         paddingY: "6px",
       }}
     >
-      <MenuItem value="Most Valuable">Most Valuable</MenuItem>
-      <MenuItem value="Least Valuable">Least Valuable</MenuItem>
-      <MenuItem value="Recently Added">Recently Added</MenuItem>
+      {items.map((item) => (
+        <MenuItem key={item.value} value={item.value}>
+          <Typography fontSize={12}>
+            {item.label}
+          </Typography>
+        </MenuItem>
+      ))}
     </Select>
   );
 };

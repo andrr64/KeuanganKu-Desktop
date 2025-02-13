@@ -15,13 +15,13 @@ interface WXWalletSummaryProps {
 
 const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
     const [transactions, setTransactions] = useState<ExpenseInterface[] | IncomeInterface[]>([]);
-    
+
     useEffect(() => {
         async function fetchExpenseData() {
             if (!wallet) return;
 
             const response = await window.db_wallets.getTransactions(wallet.id);
-            if (response.success){
+            if (response.success) {
                 setTransactions(response.data);
             }
         }
@@ -58,7 +58,9 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                                 Track your expenses over time and identify spending patterns!
                             </Typography>
                         </Box>
-                        <CustomDropdown />
+                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
+                            throw new Error('Function not implemented.');
+                        }} />
                         <LineChart
                             series={chartData.series}
                             height={250}
@@ -74,7 +76,9 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                                 Visualize your spending by category and track where your money goes!
                             </Typography>
                         </Box>
-                        <CustomDropdown />
+                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
+                            throw new Error('Function not implemented.');
+                        }} />
                         <PieChart
                             series={[{ data: pieData }]}
                             height={250}
@@ -86,10 +90,19 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <Typography variant="h6" fontWeight={700}>Transactions</Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-                        <CustomDropdown />
-                        <CustomDropdown />
-                        <CustomDropdown />
-                        <CustomDropdown />
+                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
+                            throw new Error('Function not implemented.');
+                        }} />
+
+                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
+                            throw new Error('Function not implemented.');
+                        }} />
+                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
+                            throw new Error('Function not implemented.');
+                        }} />
+                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
+                            throw new Error('Function not implemented.');
+                        }} />
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         {transactions.length === 0 && (
@@ -98,10 +111,10 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                             </Typography>
                         )}
                         {transactions.map((transaction) => {
-                            if (transaction.type == EXPENSE_TYPE){
-                                return <ExpenseCard data={transaction}/>
+                            if (transaction.type == EXPENSE_TYPE) {
+                                return <ExpenseCard data={transaction} />
                             } else {
-                                return <IncomeCard data={transaction}/>
+                                return <IncomeCard data={transaction} />
                             }
                         })}
                     </Box>

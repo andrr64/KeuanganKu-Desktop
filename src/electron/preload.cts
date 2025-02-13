@@ -12,9 +12,14 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
     addWallet: (title: string, balance: number= 0) => {
         return electron.ipcRenderer.invoke("add-wallet", title, balance);
     },
+
     getWallets: () => {
         return electron.ipcRenderer.invoke("get-wallets");
     },
+    getWalletsBySort: (sortWalletsBy: any) => {
+        return electron.ipcRenderer.invoke("get-wallets-sort", sortWalletsBy);
+    },
+
     updateWallet: (id: number, title: string, balance: number) => {
         return electron.ipcRenderer.invoke("update-wallet", id, title, balance);
     },
@@ -26,7 +31,7 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
     },
     getTransactions: (walletId: number) => {
         return electron.ipcRenderer.invoke("get-transactions", walletId);
-    }
+    },
 });
 
 electron.contextBridge.exposeInMainWorld(database.incomes, {

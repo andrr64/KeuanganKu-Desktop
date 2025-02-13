@@ -8,6 +8,7 @@ import { ExpenseFormInterface } from "./ui/interfaces/request/expense_form";
 import { GetExpenseProp } from "./ui/interfaces/request/get_expense";
 import { GetIncomesProp } from "./ui/interfaces/request/get_income";
 import { IncomeFormInterface } from "./ui/interfaces/request/income_form";
+import { EnumSortWalletsBy } from "./ui/enums/sort_wallets";
 
 declare global {
     interface Window {
@@ -27,9 +28,12 @@ declare global {
         };
         db_wallets: {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
+            
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
+            getWalletsBySort: (sortWalletsBy: EnumSortWalletsBy) => Promise<IPCResponse<WalletInterface[]>>;
             getTotalBalances: () => Promise<IPCResponse<number | null>>;
             getTransactions: (walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>; // Fix the type here
+            
             deleteWallet: (id: number) => Promise<IPCResponse<boolean>>;
         };
         app_sys: {
