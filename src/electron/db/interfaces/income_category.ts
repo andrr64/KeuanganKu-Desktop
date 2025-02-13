@@ -1,9 +1,6 @@
-export interface IWallet {
+export interface IncomeCategoryInterface {
   id: number;
   name: string;
-  description?: string;
-  balance: number;
   createdAt: Date;
   updatedAt: Date;
 }
-

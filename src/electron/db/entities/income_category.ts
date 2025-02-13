@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm';
-import { IIncomeCategory } from '../interfaces/IncomeCategory.js';
+import { IncomeCategoryInterface } from '../interfaces/income_category.js';
 
 @Entity('income_categories')
 class IncomeCategory extends BaseEntity {
@@ -19,6 +19,7 @@ class IncomeCategory extends BaseEntity {
     const count = await IncomeCategory.count();
     if (count < 1) {
       const categories = [
+        { name: 'Wallet Init' },
         { name: 'Salary' },
         { name: 'Business' },
         { name: 'Investment' },
@@ -34,7 +35,7 @@ class IncomeCategory extends BaseEntity {
     }
   }
 
-  public toInterface(): IIncomeCategory{
+  public toInterface(): IncomeCategoryInterface{
     return {
       id: this.id,
       name: this.name,

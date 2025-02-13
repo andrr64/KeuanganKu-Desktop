@@ -1,5 +1,5 @@
 import React from "react";
-import { WalletInterface } from "../../interfaces/wallet";
+import { WalletInterface } from "../../interfaces/entities/wallet";
 import { formatCurrency } from "../util/number_formater";
 import { Box, Card, Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

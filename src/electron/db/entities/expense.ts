@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity } from 'typeorm';
 import { ExpenseCategory } from './expense_category.js';
 import Wallet from './wallet.js';
-import { IExpense } from '../interfaces/Expense.js';
+import { ExpenseInterface } from '../interfaces/expense.js';
 
 @Entity('expenses')
 class Expense extends BaseEntity {
@@ -18,7 +18,6 @@ class Expense extends BaseEntity {
   @ManyToOne(() => Wallet, { eager: true }) 
   @JoinColumn({ name: 'walletId' })
   public wallet!: Wallet;
-  
 
   @Column({ type: 'text', nullable: false })
   public title!: string;
@@ -32,12 +31,12 @@ class Expense extends BaseEntity {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updatedAt!: Date;
 
-  public toInterface(): IExpense {
+  public toInterface(): ExpenseInterface {
     return {
       id: this.id,
       amount: this.amount,
-      categoryId: this.category?.id ?? null, // Ambil ID dari relasi
-      walletId: this.wallet?.id ?? null, 
+      category: this.category.toInterface(),
+      wallet: this.wallet.toInterface(),
       title: this.title,
       description: this.description,
       createdAt: this.createdAt,

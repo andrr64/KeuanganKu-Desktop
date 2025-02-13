@@ -2,9 +2,9 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import CustomDropdown from '../../../../components/Dropdown';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { WalletInterface } from '../../../../../interfaces/wallet';
+import { WalletInterface } from '../../../../../interfaces/entities/wallet';
 import React, { useEffect, useState } from 'react';
-import { ExpenseInterface } from '../../../../../interfaces/expense';
+import { ExpenseInterface } from '../../../../../interfaces/entities/expense';
 import { formatDate } from '../../../../util/date_formater';
 import { formatCurrency } from '../../../../util/number_formater';
 

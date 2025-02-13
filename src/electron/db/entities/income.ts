@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, JoinColumn } from 'typeorm';
 import IncomeCategory from './income_category.js';
 import Wallet from './wallet.js';
-import { IIncome } from '../interfaces/Income.js';
+import { IncomeInterface } from '../interfaces/income.js';
 
 @Entity('incomes')
 class Income extends BaseEntity {
@@ -20,26 +20,26 @@ class Income extends BaseEntity {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updatedAt!: Date;
 
-  @ManyToOne(() => IncomeCategory)
+  @ManyToOne(() => IncomeCategory, { eager: true })
   @JoinColumn({ name: 'categoryId' })
-  public categoryId!: number;
-
-  @ManyToOne(() => Wallet)
+  public category!: IncomeCategory;
+  
+  @ManyToOne(() => Wallet, { eager: true }) 
   @JoinColumn({ name: 'walletId' })
-  public walletId!: number;
+  public wallet!: Wallet;
 
   @Column({ type: 'text', nullable: true })
   public description!: string;
 
-  public toInterface(): IIncome {
+  public toInterface(): IncomeInterface {
     return {
       id: this.id,
       title: this.title,
       amount: this.amount,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      categoryId: this.categoryId,
-      walletId: this.walletId,
+      wallet: this.wallet.toInterface(),
+      category: this.category.toInterface(),
       description: this.description,
     };
   }

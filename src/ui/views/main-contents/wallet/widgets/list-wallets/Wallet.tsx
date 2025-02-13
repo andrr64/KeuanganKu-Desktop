@@ -1,12 +1,11 @@
-import { Box, Button, IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { Box, Button,   Typography } from '@mui/material'
 import CustomDropdown from '../../../../components/Dropdown'
 import WalletCard from '../../../../components/WalletCard'
-import { WalletInterface } from '../../../../../interfaces/wallet';
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add'
 import { formatCurrency } from '../../../../util/number_formater';
-import { More } from '@mui/icons-material';
 import { useAlert } from '../../../../alert/AlertContext';
+import { WalletInterface } from '../../../../../interfaces/entities/wallet';
 
 interface WXListWalletProps {
   openIncomeForm: (arg0: boolean) => void;
@@ -32,13 +31,13 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
         <Typography variant="h4" fontWeight="bold" color='text.primary'>
           Wallets
         </Typography>
-        <Typography variant="h5">
+        <Typography variant="h6">
           {totalBalance !== null && (
             formatCurrency(totalBalance)
           )}
         </Typography>
       </Box>
-      <Box sx={{ display: 'grid', gap: '10px', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <Box sx={{ display: 'flex', gap: '5px', flexDirection: 'column'}}>
         <Button
           onClick={(_) => openIncomeForm(true)}
           startIcon={<AddIcon />}
@@ -71,7 +70,9 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
           <WalletCard
             active={index == activeWallet}
             onClick={() => setActiveWallet(index)}
-            handleEdit={(wallet) => { }}
+            handleEdit={(wallet) => {
+              ///TODO: handleEdit
+            }}
             handleDelete={(wallet) => {
               showQuestion('Delete Wallet', 'Are you sure you want to delete this wallet?', async () => {
                 const response = await window.db_wallets.deleteWallet(wallet.id);

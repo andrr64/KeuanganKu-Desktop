@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { WalletInterface } from "../../../interfaces/wallet";
+import { WalletInterface } from "../../../interfaces/entities/wallet";
 import { Box, Divider } from "@mui/material";
 import ModalContainer from "../../modals/ModalContainer";
 import IncomeForm from "../../forms/IncomeForms";

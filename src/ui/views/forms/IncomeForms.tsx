@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { IncomeCategoryInterface } from '../../interfaces/income_category';
-import { WalletInterface } from '../../interfaces/wallet'; // Add this line
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { waitMs } from '../../util';
-import { IncomeFormInterface } from '../../interfaces/income_form';
+import { IncomeFormInterface } from '../../interfaces/request/income_form';
+import { IncomeCategoryInterface } from '../../interfaces/entities/income_category';
+import { WalletInterface } from '../../interfaces/entities/wallet';
 
 interface IncomeFormUIProps {
     whenIconCloseFire: () => void;

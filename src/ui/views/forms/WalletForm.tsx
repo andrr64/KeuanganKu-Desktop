@@ -4,7 +4,7 @@ import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
 import { waitMs } from '../../util';
-import { WalletInterface } from '../../interfaces/wallet';
+import { WalletInterface } from '../../interfaces/entities/wallet';
 
 interface WalletFormProps {
     title: string;

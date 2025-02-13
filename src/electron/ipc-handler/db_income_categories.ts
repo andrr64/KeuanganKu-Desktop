@@ -1,10 +1,10 @@
 import { ipcMain } from "electron";
 import IncomeCategory from "../db/entities/income_category.js";
 import { IPCResponse, ipcResponseError, ipcResponseSuccess } from "../db/interfaces/ipc_response.js";
-import { IIncomeCategory } from "../db/interfaces/IncomeCategory.js";
+import { IncomeCategoryInterface } from "../db/interfaces/income_category.js";
 
 export function registerDbIncomeCategoriesIPCHandler(){
-    ipcMain.handle('get-income-categories', async (): Promise<IPCResponse<IIncomeCategory[] | null>> => {
+    ipcMain.handle('get-income-categories', async (): Promise<IPCResponse<IncomeCategoryInterface[] | null>> => {
         try {
             const categories = await IncomeCategory.find();
             if (categories.length === 0) {

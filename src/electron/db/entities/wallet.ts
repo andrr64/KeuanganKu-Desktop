@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm';
-import { IWallet } from '../interfaces/Wallet.js';
+import { WalletInterface } from '../interfaces/wallet.js';
 
 @Entity('wallets')
 export class Wallet extends BaseEntity {
@@ -21,7 +21,7 @@ export class Wallet extends BaseEntity {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updatedAt!: Date;
 
-  public toInterface(): IWallet {
+  public toInterface(): WalletInterface {
     return {
       id: this.id,
       name: this.name,

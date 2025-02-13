@@ -1,31 +1,35 @@
-import { IncomeInterface } from "./ui/interfaces/income";
-import { WalletInterface } from "./ui/interfaces/wallet";
-import { IncomeCategoryInterface } from "./ui/interfaces/income_category";
-import { ExpenseCategoryInterface } from "./ui/interfaces/expense_category";
+import { ExpenseInterface } from "./ui/interfaces/entities/expense";
+import { ExpenseCategoryInterface } from "./ui/interfaces/entities/expense_category";
+import { IncomeInterface } from "./ui/interfaces/entities/income";
+import { IncomeCategoryInterface } from "./ui/interfaces/entities/income_category"; // Import IncomeCategoryInterface
+import { WalletInterface } from "./ui/interfaces/entities/wallet"; // Import WalletInterface
 import { IPCResponse } from "./ui/interfaces/ipc_response";
-import { IncomeFormInterface } from "./ui/interfaces/income_form";
-import { ExpenseFormInterface } from "./ui/interfaces/expense_form";
-import { GetExpenseProp } from "./ui/interfaces/get_expense";
+import { ExpenseFormInterface } from "./ui/interfaces/request/expense_form";
+import { GetExpenseProp } from "./ui/interfaces/request/get_expense";
+import { GetIncomesProp } from "./ui/interfaces/request/get_income";
+import { IncomeFormInterface } from "./ui/interfaces/request/income_form";
 
 declare global {
     interface Window {
         db_expense_categories: {
-            getExpenseCategories: () => Promise<IPCResponse<ExpenseCategoryInterface[]>>,
+            getExpenseCategories: () => Promise<IPCResponse<ExpenseCategoryInterface[]>>;
         };
         db_expenses: {
-            addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>,
-            getExpenses: (request: GetExpenseProp) => Promise<IPCResponse<ExpenseInterface[]>>
-        },
+            addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>;
+            getExpenses: (request: GetExpenseProp) => Promise<IPCResponse<ExpenseInterface[]>>;
+        };
         db_income_categories: {
-            getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>,
+            getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>;
         };
         db_incomes: {
-            addIncome: (incomeData: IncomeFormInterface) => Promise<IPCResponse<IncomeInterface | null>>
+            getIncomes: (request: GetIncomesProp) => Promise<IPCResponse<IncomeInterface[]>>;
+            addIncome: (incomeData: IncomeFormInterface) => Promise<IPCResponse<IncomeInterface | null>>;
         };
         db_wallets: {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
             getTotalBalances: () => Promise<IPCResponse<number | null>>;
+            getTransactions: (walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>; // Fix the type here
             deleteWallet: (id: number) => Promise<IPCResponse<boolean>>;
         };
         app_sys: {
@@ -34,4 +38,4 @@ declare global {
     }
 }
 
-export { }; // Penting agar ini dianggap sebagai modul dan tidak menimpa deklarasi global
+export { }; // Ensure this is treated as a module and does not overwrite global declarations

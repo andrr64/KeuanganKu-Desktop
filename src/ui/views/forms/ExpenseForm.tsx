@@ -3,8 +3,8 @@ import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Typo
 import { Close } from '@mui/icons-material';
 import { useAlert } from '../alert/AlertContext';
 import LoadingModal from '../modals/LoadingModal';
-import { ExpenseCategoryInterface } from '../../interfaces/expense_category';
-import { WalletInterface } from '../../interfaces/wallet';
+import { ExpenseCategoryInterface } from '../../interfaces/entities/expense_category';
+import { WalletInterface } from '../../interfaces/entities/wallet';
 import { waitMs } from '../../util';
 
 interface ExpenseFormInterface {

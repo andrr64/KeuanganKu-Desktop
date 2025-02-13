@@ -1,4 +1,4 @@
-export interface IIncomeCategory {
+export interface ExpenseCategoryInterface {
   id: number;
   name: string;
   createdAt: Date;

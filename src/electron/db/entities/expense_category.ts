@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from 'typeorm';
-import { IExpenseCategory } from '../interfaces/ExpenseCategory.js';
+import { ExpenseCategoryInterface } from '../interfaces/expense_category.js';
 
 @Entity('expense_categories')
 export class ExpenseCategory extends BaseEntity {
@@ -15,7 +15,7 @@ export class ExpenseCategory extends BaseEntity {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updatedAt!: Date;
 
-  public toInterface(): IExpenseCategory {
+  public toInterface(): ExpenseCategoryInterface {
     return {
       id: this.id,
       name: this.name,

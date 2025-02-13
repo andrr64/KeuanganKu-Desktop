@@ -23,12 +23,18 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
     },
     getTotalBalance: () => {
         return electron.ipcRenderer.invoke("get-total-balance");
+    },
+    getTransactions: (walletId: number) => {
+        return electron.ipcRenderer.invoke("get-transactions", walletId);
     }
 });
 
 electron.contextBridge.exposeInMainWorld(database.incomes, {
     addIncome: (data: {title: string, description?: string, amount: number, category_id: number, wallet_id: number}) => {
         return electron.ipcRenderer.invoke("add-income", data);
+    },
+    getIncomes: (data: {wallet_id: number, rangeType: string, startDate?: Date, endDate?: Date}) => {
+        return electron.ipcRenderer.invoke("get-incomes", data);
     }
 });
 
