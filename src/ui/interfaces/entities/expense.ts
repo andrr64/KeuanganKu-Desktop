@@ -10,4 +10,7 @@ export interface ExpenseInterface {
     category: ExpenseCategoryInterface;
     createdAt: Date;
     updatedAt: Date;
+    type: number;
 }
+
+export const EXPENSE_TYPE = 0;

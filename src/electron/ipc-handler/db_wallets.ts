@@ -130,7 +130,7 @@ export function registerDbWalletsIPCHandler() {
             const formattedData = transactions.map(transaction => transaction.toInterface());
 
             // Return the success response with the formatted data
-            return ipcResponseSuccess<ExpenseInterface[] | IncomeInterface[]>(formattedData);
+            return ipcResponseSuccess<any[]>(formattedData);
         } catch (error: any) {
             // Return the error response if something goes wrong
             return ipcResponseError(error.message);

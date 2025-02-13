@@ -41,6 +41,7 @@ class Income extends BaseEntity {
       wallet: this.wallet.toInterface(),
       category: this.category.toInterface(),
       description: this.description,
+      type: 1
     };
   }
 }

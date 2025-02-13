@@ -10,4 +10,7 @@ export interface IncomeInterface {
     category: IncomeCategoryInterface;
     wallet: WalletInterface;
     description?: string;
+    type: number;
 }
+
+export const INCOME_TYPE = 1;

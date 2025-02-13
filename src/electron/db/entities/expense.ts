@@ -41,6 +41,7 @@ class Expense extends BaseEntity {
       description: this.description,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      type: 0
     };
   }
   

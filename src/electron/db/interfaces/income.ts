@@ -10,4 +10,5 @@ export interface IncomeInterface {
   category: IncomeCategoryInterface;
   wallet: WalletInterface;
   description?: string;
+  type: 1;
 }

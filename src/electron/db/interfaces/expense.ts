@@ -10,4 +10,5 @@ export interface ExpenseInterface {
   category: ExpenseCategoryInterface;
   createdAt: Date;
   updatedAt: Date;
+  type: 0;
 }
