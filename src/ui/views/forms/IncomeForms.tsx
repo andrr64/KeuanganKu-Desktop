@@ -13,7 +13,7 @@ interface IncomeFormUIProps {
 }
 
 const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<IncomeFormInterface>({
         title: '',
@@ -24,6 +24,7 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
     });
     const [categories, setCategories] = React.useState<IncomeCategoryInterface[]>([]);
     const [wallets, setWallets] = React.useState<WalletInterface[]>([]); // Add this line
+    const [fetched, setFetched] = React.useState(false);
 
     const handleChange = (e: any | { name?: string; value: unknown }) => {
         const { name, value } = e.target;
@@ -69,9 +70,6 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
         }
     };
 
-
-
-
     const initCategories = async () => {
         const response = await window.db_expense_categories.getExpenseCategories();
         if (!response.success) {
@@ -99,13 +97,16 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
             showAlert('error', error.message);
             whenIconCloseFire();
         } finally {
-            setLoading(false);
+            setFetched(true);
         }
     };
 
     useEffect(() => {
         initData();
     }, []);
+    if (!fetched) {
+        return null;    
+    }
     return (
         <>
             <LoadingModal open={loading} />

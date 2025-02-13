@@ -22,7 +22,7 @@ interface ExpenseFormUIProps {
 }
 
 const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<ExpenseFormInterface>({
         title: '',
@@ -35,6 +35,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
     });
     const [categories, setCategories] = React.useState<ExpenseCategoryInterface[]>([]);
     const [wallets, setWallets] = React.useState<WalletInterface[]>([]);
+    const [fetched, setFetched] = React.useState(false);
 
     const handleChange = (e: any | { name?: string; value: unknown }) => {
         const { name, value } = e.target;
@@ -116,13 +117,17 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
             showAlert('error', error.message);
             whenIconCloseFire();
         } finally {
-            setLoading(false);
+            setFetched(true);
         }
     };
 
     useEffect(() => {
         initData();
     }, []);
+
+    if (!fetched){
+        return null;
+    }
 
     return (
         <>
