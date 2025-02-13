@@ -10,21 +10,24 @@ import ExpenseCard from '../../../../components/ExpenseCard';
 import IncomeCard from '../../../../components/IncomeCard';
 
 interface WXWalletSummaryProps {
-    wallet: WalletInterface;
+    wallet: WalletInterface | null;
 }
 
 const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
     const [transactions, setTransactions] = useState<ExpenseInterface[] | IncomeInterface[]>([]);
 
     useEffect(() => {
-        async function fetchExpenseData() {
-            if (!wallet) return;
+        const fetchExpenseData = async () => {
+            if (!wallet) {
+                setTransactions([]);
+                return;
+            }
 
             const response = await window.db_wallets.getTransactions(wallet.id);
             if (response.success) {
                 setTransactions(response.data);
             }
-        }
+        };
         fetchExpenseData();
     }, [wallet]);
 
@@ -58,9 +61,7 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                                 Track your expenses over time and identify spending patterns!
                             </Typography>
                         </Box>
-                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
-                            throw new Error('Function not implemented.');
-                        }} />
+                        <CustomDropdown items={[]} value={''} onChange={() => {}} />
                         <LineChart
                             series={chartData.series}
                             height={250}
@@ -76,9 +77,7 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                                 Visualize your spending by category and track where your money goes!
                             </Typography>
                         </Box>
-                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
-                            throw new Error('Function not implemented.');
-                        }} />
+                        <CustomDropdown items={[]} value={''} onChange={() => {}} />
                         <PieChart
                             series={[{ data: pieData }]}
                             height={250}
@@ -90,19 +89,10 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <Typography variant="h6" fontWeight={700}>Transactions</Typography>
                     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
-                            throw new Error('Function not implemented.');
-                        }} />
-
-                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
-                            throw new Error('Function not implemented.');
-                        }} />
-                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
-                            throw new Error('Function not implemented.');
-                        }} />
-                        <CustomDropdown items={[]} value={''} onChange={function (value: string): void {
-                            throw new Error('Function not implemented.');
-                        }} />
+                        <CustomDropdown items={[]} value={''} onChange={() => {}} />
+                        <CustomDropdown items={[]} value={''} onChange={() => {}} />
+                        <CustomDropdown items={[]} value={''} onChange={() => {}} />
+                        <CustomDropdown items={[]} value={''} onChange={() => {}} />
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         {transactions.length === 0 && (
@@ -110,13 +100,11 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                                 No transactions found.
                             </Typography>
                         )}
-                        {transactions.map((transaction) => {
-                            if (transaction.type == EXPENSE_TYPE) {
-                                return <ExpenseCard data={transaction} />
-                            } else {
-                                return <IncomeCard data={transaction} />
-                            }
-                        })}
+                        {transactions.map((transaction) => (
+                            transaction.type === EXPENSE_TYPE ? 
+                                <ExpenseCard key={transaction.id} data={transaction} /> : 
+                                <IncomeCard key={transaction.id} data={transaction} />
+                        ))}
                     </Box>
                 </CardContent>
             </Card>
