@@ -66,14 +66,6 @@ function MainLayout() {
     }
     const drawerItems = [
         {
-            name: "Home",
-            onClick: (index: number) => {
-                handleListItemClick(index);
-            },
-            icon: <HomeIcon color='inherit' />,
-            content: <Homepage />
-        },
-        {
             name: "Wallet",
             onClick: (index: number) => {
                 handleListItemClick(index);
@@ -96,8 +88,8 @@ function MainLayout() {
                 <CssBaseline />
                 <StyledDrawer variant="permanent">
                     <Toolbar />
-                    <Box sx={{ overflow: 'auto' }}>
-                        <List>
+                    <Box sx={{ overflow: 'auto', paddingX: 2.5 }}>
+                        <List sx={{gap: 1, display: 'flex', flexDirection: 'column'}}>
                             {drawerItems.map((menuItem, index) => (
                                 <ListItemButton
                                     key={index}
@@ -112,6 +104,7 @@ function MainLayout() {
                                                 backgroundColor: 'rgba(255, 255, 255, 0.2)'
                                             }
                                         },
+                                        borderRadius: 2,
                                         '&:hover': {
                                             backgroundColor: 'rgba(255, 255, 255, 0.1)'
                                         }
