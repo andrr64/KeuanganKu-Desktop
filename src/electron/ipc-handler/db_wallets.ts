@@ -66,17 +66,27 @@ export function registerDbWalletsIPCHandler() {
         }
     });
 
-    ipcMain.handle('delete-wallet', async (_, id): Promise<IPCResponse<any>> => {
+    ipcMain.handle('delete-wallet', async (_, id: number): Promise<IPCResponse<any>> => {
+        const queryRunner = AppDataSource.createQueryRunner();
+        await queryRunner.startTransaction();
+
         try {
-            const wallet = await Wallet.findOne(id);
-            if (wallet) {
-                await wallet.remove();
-                return ipcResponseSuccess(null);
-            } else {
-                return ipcResponseError('Wallet not found');
+            const wallet = await Wallet.findOne({where: {id}});
+            if (!wallet) {
+                throw new Error('Wallet not found');
             }
+
+            await queryRunner.manager.delete(Income, { wallet: { id } });
+            await queryRunner.manager.delete(Expense, { wallet: { id } });
+            await queryRunner.manager.remove(wallet);
+
+            await queryRunner.commitTransaction();
+            return ipcResponseSuccess(null);
         } catch (error: any) {
+            await queryRunner.rollbackTransaction();
             return ipcResponseError(error.message);
+        } finally {
+            await queryRunner.release();
         }
     });
 
