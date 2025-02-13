@@ -70,7 +70,7 @@ const WXListWallet: React.FC<WXListWalletProps> = ({ openIncomeForm, openExpense
           <WalletCard
             active={index == activeWallet}
             onClick={() => setActiveWallet(index)}
-            handleEdit={(wallet) => {
+            handleEdit={(_) => {
               ///TODO: handleEdit
             }}
             handleDelete={(wallet) => {

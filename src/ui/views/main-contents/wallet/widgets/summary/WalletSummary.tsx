@@ -4,10 +4,10 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { WalletInterface } from '../../../../../interfaces/entities/wallet';
 import React, { useEffect, useState } from 'react';
-import { ExpenseInterface } from '../../../../../interfaces/entities/expense';
-import { formatDate } from '../../../../util/date_formater';
-import { formatCurrency } from '../../../../util/number_formater';
+import { EXPENSE_TYPE, ExpenseInterface } from '../../../../../interfaces/entities/expense';
 import { IncomeInterface } from '../../../../../interfaces/entities/income';
+import ExpenseCard from '../../../../components/ExpenseCard';
+import IncomeCard from '../../../../components/IncomeCard';
 
 interface WXWalletSummaryProps {
     wallet: WalletInterface;
@@ -91,28 +91,19 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                         <CustomDropdown />
                         <CustomDropdown />
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         {transactions.length === 0 && (
                             <Typography variant="body2" color="text.secondary">
                                 No transactions found.
                             </Typography>
                         )}
-                        {transactions.map((transaction) => (
-                            <Card key={transaction.id} sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
-                                <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    <Box>
-                                        <Typography variant="h6" fontWeight={700}>{transaction.title}</Typography>
-                                        <Typography variant='body2'>{formatDate(transaction.createdAt)}</Typography>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {transaction.description}
-                                        </Typography>
-                                    </Box>
-                                    <Typography variant="body1" color="text.primary">
-                                        {formatCurrency(transaction.amount)}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        ))}
+                        {transactions.map((transaction) => {
+                            if (transaction.type == EXPENSE_TYPE){
+                                return <ExpenseCard data={transaction}/>
+                            } else {
+                                return <IncomeCard data={transaction}/>
+                            }
+                        })}
                     </Box>
                 </CardContent>
             </Card>
