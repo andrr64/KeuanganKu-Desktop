@@ -7,6 +7,7 @@ import Income from '../db/entities/income.js';
 import AppDataSource from '../db/config/ormconfig.js';
 import IncomeCategory from '../db/entities/income_category.js';
 import { SortWalletsBy } from '../enums/sort_wallets.js';
+import { Like } from 'typeorm';
 
 
 /* CREATE  */
@@ -121,6 +122,34 @@ const handleGetTransactions = async (_: Electron.IpcMainInvokeEvent, walletId: n
         return ipcResponseError(error.message);
     }
 };
+const handleSearchTransactions = async (_: Electron.IpcMainInvokeEvent, query: string, walletId: number): Promise<IPCResponse<any[] | null>> => {
+    try {
+
+        const incomes = await Income.find({
+            where: {
+                wallet: { id: walletId },
+                description: Like(`%${query}%`),
+                title: Like(`%${query}%`),
+            }
+        })  
+        const expenses = await Expense.find({
+            where: {
+                wallet: { id: walletId },
+                description: Like(`%${query}%`),
+                title: Like(`%${query}%`),
+            }
+        })
+        // Gabungkan hasil pencarian dari Expense dan Income
+        const transactions = [...expenses, ...incomes].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+        // Format data transaksi ke dalam bentuk yang diinginkan
+        const formattedData = transactions.map(transaction => transaction.toInterface());
+
+        return ipcResponseSuccess<any[]>(formattedData);
+    } catch (error: any) {
+        return ipcResponseError(error.message);
+    }
+};
 
 /* UPDATE */
 const handleUpdateWallet = async (_: Electron.IpcMainInvokeEvent, id: number, title: string, balance: number): Promise<IPCResponse<WalletInterface | any>> => {
@@ -172,4 +201,5 @@ export function registerDbWalletsIPCHandler() {
     ipcMain.handle('delete-wallet', handleDeleteWallet);
     ipcMain.handle('get-total-balance', handleGetTotalBalance);
     ipcMain.handle('get-transactions', handleGetTransactions);
+    ipcMain.handle('search-transactions', handleSearchTransactions);
 }

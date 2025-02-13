@@ -32,6 +32,9 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
     getTransactions: (walletId: number) => {
         return electron.ipcRenderer.invoke("get-transactions", walletId);
     },
+    searchTransactions: (query: string, walletId: number) => {
+        return electron.ipcRenderer.invoke("search-transactions", query, walletId);
+    }
 });
 
 electron.contextBridge.exposeInMainWorld(database.incomes, {
