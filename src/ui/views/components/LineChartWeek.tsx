@@ -1,16 +1,22 @@
 import React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
-interface DataPoint {
+export interface DataPoint {
   x: number; // Index hari (0-6)
   y: number; // Nilai
 }
 
-interface LineChartWeekProps {
-  data: DataPoint[];
+export interface LineData {
+  data: DataPoint[]; // Array data points
+  label: string; // Label untuk legenda
+  color: string; // Warna garis
 }
 
-const LineChartWeek: React.FC<LineChartWeekProps> = ({ data }) => {
+export interface LineChartWeekProps {
+  lines: LineData[]; // Array dari LineData
+}
+
+const LineChartWeek: React.FC<LineChartWeekProps> = ({ lines }) => {
   // Fungsi untuk mengonversi index hari ke nama hari
   const formatXAxis = (dayIndex: number) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -18,18 +24,16 @@ const LineChartWeek: React.FC<LineChartWeekProps> = ({ data }) => {
   };
 
   // Hitung nilai minimum untuk sumbu-Y
-  const minValue = Math.min(...data.map((item) => item.y)) * 0.5;
+  const minValue = Math.min(...lines.flatMap((line) => line.data.map((item) => item.y))) * 0.5;
 
   // Format data untuk MUI Charts
   const chartData = {
-    series: [
-      {
-        data: data.map((item) => item.y), // Nilai (y)
-        label: 'Income', // Label untuk legenda
-        color: '#8884d8', // Warna garis
-      },
-    ],
-    xAxis: data.map((item) => formatXAxis(item.x)), // Nama hari (x)
+    series: lines.map((line) => ({
+      data: line.data.map((item) => item.y), // Nilai (y)
+      label: line.label, // Label untuk legenda
+      color: line.color, // Warna garis
+    })),
+    xAxis: lines[0].data.map((item) => formatXAxis(item.x)), // Nama hari (x)
   };
 
   // Fungsi untuk memformat nilai sumbu-Y menjadi format "K" (ribuan)
@@ -47,7 +51,7 @@ const LineChartWeek: React.FC<LineChartWeekProps> = ({ data }) => {
         },
       ]}
       height={360}
-      margin={{ top: 25, bottom: 80,right: 20 }} // Menyesuaikan margin untuk legenda
+      margin={{ top: 25, bottom: 80, right: 20 }} // Menyesuaikan margin untuk legenda
       slotProps={{
         legend: {
           direction: 'row', // Mengatur arah legenda menjadi horizontal

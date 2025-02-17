@@ -19,6 +19,8 @@ declare global {
             addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>;
             getExpenses: (request: GetExpenseProp) => Promise<IPCResponse<ExpenseInterface[]>>;
             deleteExpense: (id: number) => Promise<IPCResponse<boolean>>;
+
+            getLineGraph: (wallet_id: number, dateRange: any) => Promise<any>;
         };
         db_income_categories: {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>;
@@ -27,6 +29,8 @@ declare global {
             getIncomes: (request: GetIncomesProp) => Promise<IPCResponse<IncomeInterface[]>>;
             addIncome: (incomeData: IncomeFormInterface) => Promise<IPCResponse<IncomeInterface | null>>;
             deleteIncome: (id: number) => Promise<IPCResponse<boolean>>;
+
+            getLineGraph: (wallet_id: number, dateRange: any) => Promise<any>;
         };
         db_wallets: {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;

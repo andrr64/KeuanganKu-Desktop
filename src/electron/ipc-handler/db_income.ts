@@ -7,6 +7,8 @@ import { ipcResponseError, ipcResponseSuccess } from "../db/interfaces/ipc_respo
 import AppDataSource from "../db/config/ormconfig.js";
 import { GetIncomesProp } from "./interfaces/get_income.js";
 import { IncomeInterface } from "../db/interfaces/income.js";
+import { DateRange } from "../enums/date_range.js";
+import { Between } from "typeorm";
 
 export function registerDBIncomeIPCHandler() {
     ipcMain.handle('add-income', async (_, data: IncomeFormInterface) => {
@@ -32,7 +34,7 @@ export function registerDBIncomeIPCHandler() {
             income.wallet = wallet;
             income.title = data.title;
             income.description = data.description ?? '';
-            
+
             await queryRunner.manager.save(income);
             await queryRunner.commitTransaction();
             return ipcResponseSuccess(income.toInterface());
@@ -53,11 +55,13 @@ export function registerDBIncomeIPCHandler() {
             }
 
             // Fetch incomes with the where condition
-            const incomes = await Income.find({ where: {
-                wallet: {
-                    id: wallet.id
+            const incomes = await Income.find({
+                where: {
+                    wallet: {
+                        id: wallet.id
+                    }
                 }
-            }});
+            });
 
             // Format the data to the interface
             const formattedData = incomes.map(income => income.toInterface());
@@ -91,6 +95,92 @@ export function registerDBIncomeIPCHandler() {
             return ipcResponseError(error.message);
         } finally {
             await queryRunner.release();
+        }
+    });
+
+    ipcMain.handle('get-income-line-graph', async (_, walletId: number, dateRange: DateRange) => {
+        try {
+            // Cari wallet berdasarkan ID
+            const wallet = await Wallet.findOne({ where: { id: walletId } });
+            if (!wallet) {
+                return ipcResponseError('Wallet not found');
+            }
+
+            // Tentukan rentang tanggal berdasarkan dateRange
+            const endDate = new Date();
+            let startDate: Date;
+
+            switch (dateRange) {
+                case DateRange.WEEK:
+                    startDate = new Date();
+                    startDate.setDate(endDate.getDate() - 7);
+                    break;
+                case DateRange.MONTH:
+                    startDate = new Date();
+                    startDate.setMonth(endDate.getMonth() - 1);
+                    break;
+                case DateRange.YEAR:
+                    startDate = new Date();
+                    startDate.setFullYear(endDate.getFullYear() - 1);
+                    break;
+                default:
+                    throw new Error('Invalid date range');
+            }
+
+            // Cari data income dalam rentang tanggal yang ditentukan
+            const incomes = await Income.find({
+                where: {
+                    wallet: { id: walletId },
+                    createdAt: Between(startDate, endDate),
+                },
+                order: { createdAt: 'ASC' },
+            });
+
+            // Format data untuk grafik berdasarkan dateRange
+            let graphData : {}[];
+
+            switch (dateRange) {
+                case DateRange.WEEK:
+                    // Kelompokkan data berdasarkan hari (0-6)
+                    const weeklyData = Array(7).fill(0); // Inisialisasi array dengan 7 elemen (0-6)
+                    incomes.forEach((income) => {
+                        const dayIndex = income.createdAt.getDay(); // Ambil index hari (0-6)
+                        weeklyData[dayIndex] += income.amount; // Tambahkan amount ke hari yang sesuai
+                    });
+                    graphData = weeklyData.map((total, index) => ({ x: index, y: total }));
+                    break;
+
+                case DateRange.MONTH:
+                    // Kelompokkan data berdasarkan tanggal (0 hingga tanggal terakhir - 1)
+                    const lastDayOfMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+                    const monthlyData = Array(lastDayOfMonth).fill(0); // Inisialisasi array dengan jumlah hari dalam bulan
+                    incomes.forEach((income) => {
+                        const dayOfMonth = income.createdAt.getDate() - 1; // Ambil tanggal (0-based)
+                        monthlyData[dayOfMonth] += income.amount; // Tambahkan amount ke tanggal yang sesuai
+                    });
+                    graphData = monthlyData.map((total, index) => ({ x: index, y: total }));
+                    break;
+
+                case DateRange.YEAR:
+                    // Kelompokkan data berdasarkan bulan (0-11)
+                    const yearlyData = Array(12).fill(0); // Inisialisasi array dengan 12 elemen (0-11)
+                    incomes.forEach((income) => {
+                        const monthIndex = income.createdAt.getMonth(); // Ambil index bulan (0-11)
+                        yearlyData[monthIndex] += income.amount; // Tambahkan amount ke bulan yang sesuai
+                    });
+                    graphData = yearlyData.map((total, index) => ({ x: index, y: total }));
+                    break;
+
+                default:
+                    throw new Error('Invalid date range');
+            }
+
+            // Kirim respons sukses
+            return ipcResponseSuccess(graphData);
+        } catch (error: any) {
+            // Tangani error dan kirim respons error
+            console.error('Error in get-income-line-graph:', error);
+            return ipcResponseError(error.message || 'An unexpected error occurred');
         }
     });
 }

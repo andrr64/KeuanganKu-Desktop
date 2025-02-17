@@ -12,7 +12,6 @@ electron.contextBridge.exposeInMainWorld(database.wallet, {
     addWallet: (title: string, balance: number= 0) => {
         return electron.ipcRenderer.invoke("add-wallet", title, balance);
     },
-
     getWallets: () => {
         return electron.ipcRenderer.invoke("get-wallets");
     },
@@ -47,6 +46,9 @@ electron.contextBridge.exposeInMainWorld(database.incomes, {
     deleteIncome: (id: number) => {
         return electron.ipcRenderer.invoke("delete-income", id);
     },
+    getLineGraph: (wallet_id: number, dateRange: any) => {
+        return electron.ipcRenderer.invoke('get-income-line-graph', wallet_id, dateRange);
+    }
 });
 
 electron.contextBridge.exposeInMainWorld(database.expenses, {
@@ -58,6 +60,9 @@ electron.contextBridge.exposeInMainWorld(database.expenses, {
     },
     deleteExpense: (id: number) => {
         return electron.ipcRenderer.invoke("delete-expense", id);
+    },
+    getLineGraph: (wallet_id: number, dateRange: any) => {
+        return electron.ipcRenderer.invoke('get-expense-line-graph', wallet_id, dateRange);
     }
 });
 

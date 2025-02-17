@@ -40,7 +40,7 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
 
     useEffect(() => {
         const fetchExpenseData = async () => {
-            setTransactions([]); // Reset data sebelum fetch data baru
+            setTransactions([]);
             if (wallet) {
                 const response = await window.db_wallets.getTransactions(wallet.id);
                 if (response.success) {
@@ -76,7 +76,13 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                             </Typography>
                         </Box>
                         <CustomDropdown items={[]} value={''} onChange={() => { }} />
-                        <LineChartWeek data={data} />
+                        <LineChartWeek lines={[
+                            {
+                                data: data,
+                                label: "Expense",
+                                color: "#FF0000"
+                            }
+                        ]} />
                     </CardContent>
                 </Card>
             </Box>
