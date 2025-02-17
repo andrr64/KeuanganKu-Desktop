@@ -1,74 +1,101 @@
-import React, { useEffect, useState } from "react";
-import { EXPENSE_TYPE, ExpenseInterface } from "../../../../interfaces/entities/expense";
+import React, { useEffect, useState, useCallback } from "react";
+import { WalletInterface } from "../../../../interfaces/entities/wallet";
 import { IncomeInterface } from "../../../../interfaces/entities/income";
-import { Box, Card, CardContent, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, Menu } from "@mui/material";
+import { EXPENSE_TYPE, ExpenseInterface } from "../../../../interfaces/entities/expense";
+import { Box, Card, CardContent, IconButton, Menu, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { Close, MoreVert, Search } from "@mui/icons-material";
 import CustomDropdown from "../../../components/Dropdown";
 import { formatCurrency } from "../../../util/number_formater";
 import { formatDateSimple } from "../../../util/date_formater";
 import { DeleteMenuItem, EditMenuItem, ViewMenuItem } from "../../../components/MenuItems";
-import { useAlert } from "../../../alert/AlertContext";
 
 interface WalletTransactionsProps {
-    transactions: (ExpenseInterface | IncomeInterface)[];
-    searchResults: (ExpenseInterface | IncomeInterface)[];
-    searchQuery: string;
-    isSearching: boolean;
-
-    resetSearch: () => void;
-    setSearchQuery: (value: string) => void;
-    performSearch: (query: string) => void;
+    wallet: WalletInterface | null;
 }
 
-const WalletTransactions: React.FC<WalletTransactionsProps> = ({
-    transactions,
-    searchQuery,
-    setSearchQuery,
-    searchResults,
-    performSearch,
-    resetSearch,
-    isSearching
-}) => {
+const WalletTransactions: React.FC<WalletTransactionsProps> = ({ wallet }) => {
+    const [transactions, setTransactions] = useState<Array<ExpenseInterface | IncomeInterface>>([]);
+    const [searchResults, setSearchResults] = useState<Array<ExpenseInterface | IncomeInterface>>([]);
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
     const [selectedTransaction, setSelectedTransaction] = useState<ExpenseInterface | IncomeInterface | null>(null);
-    const [localQuery, setLocalQuery] = useState<string>('');
-    const { showAlert } = useAlert();
+    const [isSearching, setIsSearching] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
+    // Fetch transactions
+    const fetchTransactions = useCallback(async () => {
+        if (wallet) {
+            // Reset transactions sebelum fetching data baru
+            setTransactions([]);
+
+            const response = await window.db_wallets.getTransactions(wallet.id);
+            if (response.success) {
+                setTransactions(response.data);
+            }
+        }
+    }, [wallet]);
+
+    // Perform search
+    const performSearch = useCallback(async () => {
+        if (wallet && searchQuery.trim()) {
+            const response = await window.db_wallets.searchTransactions(searchQuery.toLowerCase(), wallet.id);
+            if (response.success) {
+                setIsSearching(true);
+                setSearchResults(response.data);
+            }
+        }
+    }, [wallet, searchQuery]);
+
+    // Reset search
+    const resetSearch = useCallback(() => {
+        setIsSearching(false);
+        setSearchResults([]);
+        setSearchQuery('');
+    }, []);
+
+    // Handle search on Enter key
+    const handleSearchOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            performSearch();
+        }
+    };
+
+    // Open menu for transaction actions
     const openMenu = (event: React.MouseEvent<HTMLElement>, transaction: ExpenseInterface | IncomeInterface) => {
         setMenuAnchor(event.currentTarget);
         setSelectedTransaction(transaction);
     };
 
+    // Close menu
     const closeMenu = () => {
         setMenuAnchor(null);
         setSelectedTransaction(null);
     };
 
-    const handleSearchOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            if (localQuery.trim()) {
-                setSearchQuery(localQuery);
-            } else {
-                showAlert('error', 'Search query cannot be empty');
-            }
-        }
-    };
+    // Fetch transactions on wallet change
+    useEffect(() => {
+        fetchTransactions();
+    }, [wallet, fetchTransactions]);
+
+    // Perform search when searchQuery changes
     useEffect(() => {
         if (searchQuery.trim()) {
-            performSearch(searchQuery);  // Lakukan pencarian hanya jika query tidak kosong
+            performSearch();
+        } else {
+            resetSearch();
         }
-    }, [searchQuery]);
-
+    }, [searchQuery, performSearch, resetSearch]);
 
     return (
         <Card sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <Typography variant="h6" fontWeight={700}>Transactions</Typography>
+
+                {/* Search Bar */}
                 <TextField
                     label="Search Transactions"
                     variant="outlined"
-                    value={localQuery}
-                    onChange={(e) => setLocalQuery(e.target.value)}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyUp={handleSearchOnEnter}
                     fullWidth
                     sx={{ marginBottom: '10px' }}
@@ -76,19 +103,11 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({
                         input: {
                             endAdornment: (
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <IconButton onClick={() => {
-                                        if (localQuery.trim()) {
-                                            setSearchQuery(localQuery);
-                                        } else {
-                                            showAlert('error', 'Search query cannot be empty');
-                                        }
-                                    }}>
+                                    <IconButton onClick={performSearch}>
                                         <Search />
                                     </IconButton>
-                                    {localQuery.length !== 0 && (
-                                        <IconButton onClick={() => {
-                                            setLocalQuery('');
-                                        }}>
+                                    {searchQuery.length !== 0 && (
+                                        <IconButton onClick={resetSearch}>
                                             <Close />
                                         </IconButton>
                                     )}
@@ -97,12 +116,16 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({
                         }
                     }}
                 />
+
+                {/* Filters */}
                 <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
                     <CustomDropdown items={[]} value={''} onChange={() => { }} />
                     <CustomDropdown items={[]} value={''} onChange={() => { }} />
                     <CustomDropdown items={[]} value={''} onChange={() => { }} />
                     <CustomDropdown items={[]} value={''} onChange={() => { }} />
                 </Box>
+
+                {/* Search Results */}
                 {isSearching && (
                     <Box
                         sx={{
@@ -115,19 +138,20 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({
                             marginBottom: '10px'
                         }}
                     >
-                        <Typography variant="body1" >
-                            Search Results for <b> '{searchQuery}'</b>   ({searchResults.length} results)
+                        <Typography variant="body1">
+                            Search Results for <b>'{searchQuery}'</b> ({searchResults.length} results)
                         </Typography>
-                        <IconButton onClick={(_) => resetSearch()} sx={{ color: '#888' }}>
+                        <IconButton onClick={resetSearch} sx={{ color: '#888' }}>
                             <Close />
                         </IconButton>
                     </Box>
                 )}
 
+                {/* Transactions Table */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, height: '480px', overflowY: 'auto' }}>
                     <Table sx={{ '& .MuiTableCell-root': { fontSize: '12px' } }}>
                         <TableHead>
-                            <TableRow >
+                            <TableRow>
                                 <TableCell width={10}>No</TableCell>
                                 <TableCell width={10}>Type</TableCell>
                                 <TableCell>Title</TableCell>
@@ -171,7 +195,7 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({
                 </Box>
             </CardContent>
 
-            {/* Menu Dropdown */}
+            {/* Transaction Actions Menu */}
             <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
                 <ViewMenuItem onClick={() => { console.log("View", selectedTransaction); closeMenu(); }} />
                 <EditMenuItem onClick={() => { console.log("Edit", selectedTransaction); closeMenu(); }} />

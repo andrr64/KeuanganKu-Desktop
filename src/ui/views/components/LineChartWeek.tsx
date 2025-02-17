@@ -23,9 +23,6 @@ const LineChartWeek: React.FC<LineChartWeekProps> = ({ lines }) => {
     return days[dayIndex]; // Ambil nama hari berdasarkan index
   };
 
-  // Hitung nilai minimum untuk sumbu-Y
-  const minValue = Math.min(...lines.flatMap((line) => line.data.map((item) => item.y))) * 0.5;
-
   // Format data untuk MUI Charts
   const chartData = {
     series: lines.map((line) => ({
@@ -60,7 +57,6 @@ const LineChartWeek: React.FC<LineChartWeekProps> = ({ lines }) => {
       }}
       yAxis={[
         {
-          min: minValue,
           valueFormatter: (value) => formatYAxis(value), // Format nilai sumbu-Y
         },
       ]}

@@ -5,12 +5,13 @@ import ModalContainer from "../../modals/ModalContainer";
 import IncomeForm from "../../forms/IncomeForms";
 import ExpenseForm from "../../forms/ExpenseForm";
 import WalletForm from "../../forms/WalletForm";
-import WXWalletSummary from "./widgets/Summary";
 import WXListWallet from "./widgets/ListWallet";
 import { MainContent } from "../../MainLayout";
 import { EnumSortWalletsBy } from "../../../enums/sort_wallets";
 import { useAlert } from "../../alert/AlertContext";
 import Loading from "../../components/Loading";
+import WalletTransactions from "./widgets/Transactions";
+import Graphs from "./widgets/Graphs";
 
 function WalletPage() {
   const [openIncomeForm, setOpenIncomeForm] = useState(false);
@@ -19,7 +20,7 @@ function WalletPage() {
   const [wallets, setWallets] = useState<WalletInterface[]>([]);
   const [activeWalletIndex, setSelectedWalletIndex] = useState<number | null>(null);
   const [sortWalletVal, setSortWalletValue] = useState<EnumSortWalletsBy>(EnumSortWalletsBy.Alphabetic_ASC);
-  const {showAlert, showQuestion } = useAlert();
+  const { showAlert, showQuestion } = useAlert();
   const [fetched, setFetched] = useState(false);
 
   const totalBalance = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);
@@ -83,8 +84,6 @@ function WalletPage() {
             display: "grid",
             gridTemplateColumns: "3fr auto 7fr",
             gap: "16px",
-            width: "100%",
-            minHeight: '100vh'
           }}
         >
           <WXListWallet
@@ -102,7 +101,11 @@ function WalletPage() {
           />
           <Divider sx={{ bgcolor: '#E8F2FF' }} orientation="vertical" flexItem />
           {activeWalletIndex !== null && (
-            <WXWalletSummary wallet={wallets[activeWalletIndex]} />
+            // Summary
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <WalletTransactions wallet={wallets[activeWalletIndex]} />
+              <Graphs wallet={wallets[activeWalletIndex]}/>
+            </Box>
           )}
         </Box>
       </MainContent>

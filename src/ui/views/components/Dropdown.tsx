@@ -26,6 +26,7 @@ const CustomDropdown: React.FC<CustomDropdownProps<any>> = ({ value, items, onCh
         fontFamily: "Inter",
         fontWeight: 500,
         color: "#3D5776",
+        width: '100%',
         ".MuiOutlinedInput-notchedOutline": { border: "none" },
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
           border: "1px solid #C2DBFF",
