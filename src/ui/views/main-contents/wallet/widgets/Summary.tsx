@@ -1,12 +1,11 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import CustomDropdown from '../../../components/Dropdown';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { PieChart } from '@mui/x-charts/PieChart';
 import { WalletInterface } from '../../../../interfaces/entities/wallet';
 import React, { useEffect, useState } from 'react';
 import { ExpenseInterface } from '../../../../interfaces/entities/expense';
 import { IncomeInterface } from '../../../../interfaces/entities/income';
 import WalletTransactions from './Transactions';
+import LineChartWeek from '../../../components/LineChartWeek';
 
 interface WXWalletSummaryProps {
     wallet: WalletInterface | null;
@@ -29,22 +28,14 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
         }
     }
 
-    const chartData = {
-        xAxis: [{ scaleType: 'point', data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }],
-        series: [
-            {
-                data: [2, 5.5, 2, 8.5, 1.5, 5, 3],
-                area: true,
-                color: '#1976D2',
-                showMark: true,
-            },
-        ],
-    };
-    const pieData = [
-        { label: "Food", value: 40, color: "#ff7043" },
-        { label: "Transport", value: 25, color: "#42a5f5" },
-        { label: "Shopping", value: 20, color: "#66bb6a" },
-        { label: "Entertainment", value: 15, color: "#ab47bc" },
+    const data = [
+        { x: 0, y: 10 * 100000 }, // Sunday
+        { x: 1, y: 20 * 100000 }, // Monday
+        { x: 2, y: 15 * 100000 }, // Tuesday
+        { x: 3, y: 25 * 100000 }, // Wednesday
+        { x: 4, y: 30 * 100000 }, // Thursday
+        { x: 5, y: 22 * 100000 }, // Friday
+        { x: 6, y: 28 * 100000 }, // Saturday
     ];
 
     useEffect(() => {
@@ -85,26 +76,7 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
                             </Typography>
                         </Box>
                         <CustomDropdown items={[]} value={''} onChange={() => { }} />
-                        <LineChart
-                            series={chartData.series}
-                            height={250}
-                            margin={{ top: 20, bottom: 30, left: 30, right: 20 }}
-                        />
-                    </CardContent>
-                </Card>
-                <Card sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
-                    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <Box>
-                            <Typography variant="h6" fontWeight={700}>Where Does Your Money Go?</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Visualize your spending by category and track where your money goes!
-                            </Typography>
-                        </Box>
-                        <CustomDropdown items={[]} value={''} onChange={() => { }} />
-                        <PieChart
-                            series={[{ data: pieData }]}
-                            height={250}
-                        />
+                        <LineChartWeek data={data} />
                     </CardContent>
                 </Card>
             </Box>

@@ -5,7 +5,7 @@ import ModalContainer from "../../modals/ModalContainer";
 import IncomeForm from "../../forms/IncomeForms";
 import ExpenseForm from "../../forms/ExpenseForm";
 import WalletForm from "../../forms/WalletForm";
-import WXWalletSummary from "./widgets/Graphs";
+import WXWalletSummary from "./widgets/Summary";
 import WXListWallet from "./widgets/ListWallet";
 import { MainContent } from "../../MainLayout";
 import { EnumSortWalletsBy } from "../../../enums/sort_wallets";
