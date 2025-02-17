@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import CustomDropdown from '../../../../components/Dropdown';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -14,11 +14,21 @@ interface WXWalletSummaryProps {
 
 const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
     const [transactions, setTransactions] = useState<ExpenseInterface[] | IncomeInterface[]>([]);
+    const [searchResults, setSearchResults] = useState<ExpenseInterface[] | IncomeInterface[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [isInSearchMode, setIsInSearchMode] = useState<boolean>(false);
 
-    const handleSearch = async () => {
-        
+    const performSearch = async () => {
+        if (wallet !== null) {
+            const query = searchQuery.toLowerCase();
+            const response = await window.db_wallets.searchTransactions(query, wallet.id);
+            if (response.success) {
+                setIsInSearchMode(true);
+                setSearchResults([...response.data]);
+            }
+        }
     }
+
     const chartData = {
         xAxis: [{ scaleType: 'point', data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }],
         series: [
@@ -52,7 +62,19 @@ const WXWalletSummary: React.FC<WXWalletSummaryProps> = ({ wallet }) => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <WalletTransactions transactions={transactions} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <WalletTransactions
+                transactions={transactions}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                searchResults={searchResults}
+                resetSearch={() => {
+                    setIsInSearchMode(false);
+                    setSearchResults([]);
+                    setSearchQuery(''); // reset query tanpa memicu pencarian
+                }}
+                isSearching={isInSearchMode}
+                performSearch={performSearch}
+            />
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
                 <Card sx={{ padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
                     <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

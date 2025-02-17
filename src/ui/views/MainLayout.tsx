@@ -8,7 +8,6 @@ import {
     Toolbar,
     styled,
 } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -16,7 +15,6 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useAlert } from './alert/AlertContext';
-import Homepage from './main-contents/home/Home';
 import WalletPage from './main-contents/wallet/Wallet';
 
 // Buat tema kustom

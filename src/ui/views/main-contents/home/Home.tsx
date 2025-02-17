@@ -1,7 +1,7 @@
 import { Box, IconButton, Paper, Typography, Menu, MenuItem } from "@mui/material"
 import { MainContent } from "../../MainLayout"
 import React from "react";
-import { MoreVert, MoreVertOutlined } from "@mui/icons-material";
+import {MoreVertOutlined } from "@mui/icons-material";
 
 function Homepage() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

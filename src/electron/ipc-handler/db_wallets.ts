@@ -7,7 +7,7 @@ import Income from '../db/entities/income.js';
 import AppDataSource from '../db/config/ormconfig.js';
 import IncomeCategory from '../db/entities/income_category.js';
 import { SortWalletsBy } from '../enums/sort_wallets.js';
-import { Like } from 'typeorm';
+import { ILike, Like } from 'typeorm';
 
 
 /* CREATE  */
@@ -124,21 +124,21 @@ const handleGetTransactions = async (_: Electron.IpcMainInvokeEvent, walletId: n
 };
 const handleSearchTransactions = async (_: Electron.IpcMainInvokeEvent, query: string, walletId: number): Promise<IPCResponse<any[] | null>> => {
     try {
-
         const incomes = await Income.find({
-            where: {
-                wallet: { id: walletId },
-                description: Like(`%${query}%`),
-                title: Like(`%${query}%`),
-            }
-        })  
-        const expenses = await Expense.find({
-            where: {
-                wallet: { id: walletId },
-                description: Like(`%${query}%`),
-                title: Like(`%${query}%`),
-            }
+            where: [
+                { wallet: { id: walletId }, description: ILike(`%${query}%`) },
+                { wallet: { id: walletId }, title: ILike(`%${query}%`) }
+            ]
         })
+        
+        const expenses = await Expense.find({
+            where: [
+                { wallet: { id: walletId }, description: ILike(`%${query}%`) },
+                { wallet: { id: walletId }, title: ILike(`%${query}%`) }
+            ]
+        })
+        
+        
         // Gabungkan hasil pencarian dari Expense dan Income
         const transactions = [...expenses, ...incomes].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 

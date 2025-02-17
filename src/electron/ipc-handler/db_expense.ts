@@ -46,7 +46,6 @@ export function registerDBExpenseIPCHandler() {
         }
     });
 
-
     ipcMain.handle('get-expenses', async (_, data: GetExpensesProp) => {
         try {
             // Check if the wallet exists
@@ -70,6 +69,31 @@ export function registerDBExpenseIPCHandler() {
         } catch (error: any) {
             // Return the error response if something goes wrong
             return ipcResponseError(error.message);
+        }
+    });
+
+    ipcMain.handle('delete-expense', async (_, id: number) => {
+        const queryRunner = AppDataSource.createQueryRunner();
+        await queryRunner.startTransaction();
+        try {
+            const expense = await queryRunner.manager.findOneBy(Expense, { id });
+            if (!expense) {
+                throw new Error('Expense not found');
+            }
+            const wallet = await queryRunner.manager.findOneBy(Wallet, { id: expense.wallet.id });
+            if (!wallet) {
+                throw new Error('Wallet not found');
+            }
+            wallet.balance += expense.amount;
+            await queryRunner.manager.save(wallet);
+            await queryRunner.manager.delete(Expense, id);
+            await queryRunner.commitTransaction();
+            return ipcResponseSuccess(true);
+        } catch (error: any) {
+            await queryRunner.rollbackTransaction();
+            return ipcResponseError(error.message);
+        } finally {
+            await queryRunner.release();
         }
     });
 }

@@ -68,4 +68,29 @@ export function registerDBIncomeIPCHandler() {
             return ipcResponseError(error.message);
         }
     });
+
+    ipcMain.handle('delete-income', async (_, id: number) => {
+        const queryRunner = AppDataSource.createQueryRunner();
+        await queryRunner.startTransaction();
+        try {
+            const income = await queryRunner.manager.findOneBy(Income, { id });
+            if (!income) {
+                throw new Error('Income not found');
+            }
+            const wallet = await queryRunner.manager.findOneBy(Wallet, { id: income.wallet.id });
+            if (!wallet) {
+                throw new Error('Wallet not found');
+            }
+            wallet.balance -= income.amount;
+            await queryRunner.manager.save(wallet);
+            await queryRunner.manager.delete(Income, id);
+            await queryRunner.commitTransaction();
+            return ipcResponseSuccess(true);
+        } catch (error: any) {
+            await queryRunner.rollbackTransaction();
+            return ipcResponseError(error.message);
+        } finally {
+            await queryRunner.release();
+        }
+    });
 }

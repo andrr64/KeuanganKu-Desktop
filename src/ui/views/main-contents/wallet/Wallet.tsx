@@ -17,7 +17,7 @@ function WalletPage() {
   const [openExpenseForm, setOpenExpenseForm] = useState(false);
   const [openWalletForm, setOpenWalletForm] = useState(false);
   const [wallets, setWallets] = useState<WalletInterface[]>([]);
-  const [activeWallet, setActiveWallet] = useState<number | null>(null);
+  const [activeWalletIndex, setActiveWallet] = useState<number | null>(null);
   const [totalBalance, setTotalBalance] = useState<number | null>(0);
   const [sortWalletVal, setSortWalletValue] = useState<EnumSortWalletsBy>(EnumSortWalletsBy.Alphabetic_ASC);
   const { showAlert, showQuestion } = useAlert();
@@ -25,6 +25,7 @@ function WalletPage() {
 
   const handleNewWallet = async (wallet: WalletInterface) => {
     setWallets([...wallets, wallet]);
+    setTotalBalance(totalBalance?? 0 + wallet.balance);
   };
 
   const handleEdit = async (_: WalletInterface) => {
@@ -54,18 +55,18 @@ function WalletPage() {
       setWallets(response.data);
       setActiveWallet(0);
       setTotalBalance(response.data.reduce((acc, wallet) => acc + wallet.balance, 0));
-      setFetched(true);
     }
+    setFetched(true);
   };
 
   useEffect(() => {
     fetchData();
   }, [sortWalletVal]);
 
-  if (!fetched){
+  if (!fetched) {
     return (
-      <Box sx={{height: '100vh'}}>
-        <Loading/>
+      <Box sx={{ height: '100vh' }}>
+        <Loading />
       </Box>
     );
   }
@@ -95,7 +96,7 @@ function WalletPage() {
             openIncomeForm={setOpenIncomeForm}
             openExpenseForm={setOpenExpenseForm}
             openWalletForm={setOpenWalletForm}
-            activeWalletIndex={activeWallet}
+            activeWalletIndex={activeWalletIndex}
             sortWalletValue={sortWalletVal}
             setSortValue={setSortWalletValue}
             wallets={wallets}
@@ -105,7 +106,9 @@ function WalletPage() {
             handleEdit={handleEdit}
           />
           <Divider sx={{ bgcolor: '#E8F2FF' }} orientation="vertical" flexItem />
-          <WXWalletSummary wallet={activeWallet !== null ? wallets[activeWallet] : null} />
+          {activeWalletIndex !== null && (
+            <WXWalletSummary wallet={wallets[activeWalletIndex]} />
+          )}
         </Box>
       </MainContent>
     </>

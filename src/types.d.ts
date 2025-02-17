@@ -18,6 +18,7 @@ declare global {
         db_expenses: {
             addExpense: (expenseData: ExpenseFormInterface) => Promise<IPCResponse<ExpenseInterface | null>>;
             getExpenses: (request: GetExpenseProp) => Promise<IPCResponse<ExpenseInterface[]>>;
+            deleteExpense: (id: number) => Promise<IPCResponse<boolean>>;
         };
         db_income_categories: {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>;
@@ -25,6 +26,7 @@ declare global {
         db_incomes: {
             getIncomes: (request: GetIncomesProp) => Promise<IPCResponse<IncomeInterface[]>>;
             addIncome: (incomeData: IncomeFormInterface) => Promise<IPCResponse<IncomeInterface | null>>;
+            deleteIncome: (id: number) => Promise<IPCResponse<boolean>>;
         };
         db_wallets: {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
@@ -32,8 +34,9 @@ declare global {
             getWallets: () => Promise<IPCResponse<WalletInterface[]>>;
             getWalletsBySort: (sortWalletsBy: EnumSortWalletsBy) => Promise<IPCResponse<WalletInterface[]>>;
             getTotalBalances: () => Promise<IPCResponse<number | null>>;
-            getTransactions: (walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>; // Fix the type here
-            
+            getTransactions: (walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>; 
+            searchTransactions: (query: string ,walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>;
+
             deleteWallet: (id: number) => Promise<IPCResponse<boolean>>;
         };
         app_sys: {
