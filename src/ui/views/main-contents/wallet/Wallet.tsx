@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { WalletInterface } from "../../../interfaces/entities/wallet";
 import { Box, Divider } from "@mui/material";
 import ModalContainer from "../../modals/ModalContainer";
 import IncomeForm from "../../forms/IncomeForms";
 import ExpenseForm from "../../forms/ExpenseForm";
 import WalletForm from "../../forms/WalletForm";
-import WXWalletSummary from "./widgets/summary/WalletSummary";
-import WXListWallet from "./widgets/list-wallets/ListWallet";
+import WXWalletSummary from "./widgets/Graphs";
+import WXListWallet from "./widgets/ListWallet";
 import { MainContent } from "../../MainLayout";
 import { EnumSortWalletsBy } from "../../../enums/sort_wallets";
 import { useAlert } from "../../alert/AlertContext";
@@ -17,51 +17,46 @@ function WalletPage() {
   const [openExpenseForm, setOpenExpenseForm] = useState(false);
   const [openWalletForm, setOpenWalletForm] = useState(false);
   const [wallets, setWallets] = useState<WalletInterface[]>([]);
-  const [activeWalletIndex, setActiveWallet] = useState<number | null>(null);
-  const [totalBalance, setTotalBalance] = useState<number | null>(0);
+  const [activeWalletIndex, setSelectedWalletIndex] = useState<number | null>(null);
   const [sortWalletVal, setSortWalletValue] = useState<EnumSortWalletsBy>(EnumSortWalletsBy.Alphabetic_ASC);
-  const { showAlert, showQuestion } = useAlert();
+  const {showAlert, showQuestion } = useAlert();
   const [fetched, setFetched] = useState(false);
 
-  const handleNewWallet = async (wallet: WalletInterface) => {
-    setWallets([...wallets, wallet]);
-    setTotalBalance(totalBalance?? 0 + wallet.balance);
-  };
+  const totalBalance = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);
 
-  const handleEdit = async (_: WalletInterface) => {
+  const handleNewWallet = useCallback((newWallet: WalletInterface) => {
+    setWallets(prev => [...prev, newWallet]);
+  }, []);
+
+  const handleEdit = useCallback(async (_: WalletInterface) => {
     // Implement edit functionality
-  };
+  }, []);
 
-  const handleDelete = (wallet: WalletInterface) => {
+  const handleDelete = useCallback((wallet: WalletInterface) => {
     showQuestion('Delete Wallet', 'Are you sure you want to delete this wallet?', async () => {
       const response = await window.db_wallets.deleteWallet(wallet.id);
       if (response.success) {
         setWallets(prevWallets => prevWallets.filter(w => w.id !== wallet.id));
-        if (wallets.length === 1) {
-          setActiveWallet(0);
-        } else if (wallets.length === 0) {
-          setActiveWallet(null);
-        }
         showAlert('success', 'Wallet deleted successfully');
       } else {
         showAlert('error', response.message);
       }
     });
-  };
+  }, [showQuestion, showAlert]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const response = await window.db_wallets.getWalletsBySort(sortWalletVal);
     if (response.success) {
-      setWallets(response.data);
-      setActiveWallet(0);
-      setTotalBalance(response.data.reduce((acc, wallet) => acc + wallet.balance, 0));
+      const walletsData = response.data;
+      setWallets(walletsData);
+      setSelectedWalletIndex(walletsData.length > 0 ? 0 : null);
     }
     setFetched(true);
-  };
+  }, [sortWalletVal]);
 
   useEffect(() => {
     fetchData();
-  }, [sortWalletVal]);
+  }, [fetchData]);
 
   if (!fetched) {
     return (
@@ -101,7 +96,7 @@ function WalletPage() {
             setSortValue={setSortWalletValue}
             wallets={wallets}
             totalBalance={totalBalance}
-            setActiveWallet={setActiveWallet}
+            setActiveWallet={setSelectedWalletIndex}
             handleDelete={handleDelete}
             handleEdit={handleEdit}
           />

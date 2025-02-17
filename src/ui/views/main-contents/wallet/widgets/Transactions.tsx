@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { EXPENSE_TYPE, ExpenseInterface } from "../../../../../interfaces/entities/expense";
-import { IncomeInterface } from "../../../../../interfaces/entities/income";
+import { EXPENSE_TYPE, ExpenseInterface } from "../../../../interfaces/entities/expense";
+import { IncomeInterface } from "../../../../interfaces/entities/income";
 import { Box, Card, CardContent, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, Menu } from "@mui/material";
 import { Close, MoreVert, Search } from "@mui/icons-material";
-import CustomDropdown from "../../../../components/Dropdown";
-import { formatCurrency } from "../../../../util/number_formater";
-import { formatDateSimple } from "../../../../util/date_formater";
-import { DeleteMenuItem, EditMenuItem, ViewMenuItem } from "../../../../components/MenuItems";
-import { useAlert } from "../../../../alert/AlertContext";
+import CustomDropdown from "../../../components/Dropdown";
+import { formatCurrency } from "../../../util/number_formater";
+import { formatDateSimple } from "../../../util/date_formater";
+import { DeleteMenuItem, EditMenuItem, ViewMenuItem } from "../../../components/MenuItems";
+import { useAlert } from "../../../alert/AlertContext";
 
 interface WalletTransactionsProps {
     transactions: (ExpenseInterface | IncomeInterface)[];
