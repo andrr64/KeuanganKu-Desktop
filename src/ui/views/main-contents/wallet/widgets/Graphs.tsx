@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import CustomDropdown from "../../../components/Dropdown";
 import { DateRange, dateRangeMenuItems } from "../../../../enums/date_range";
 import { useCallback, useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import BarChartYear from "../../../components/graphs/BarChartYear";
 
 import { WalletInterface } from "../../../../interfaces/entities/wallet";
 import { CartesianChartType, CartesianChartTypeMenuItems } from "../../../../enums/chart_type";
+import { waitMs } from "../../../../util";
 
 interface GraphsPageProps {
     wallet: WalletInterface;
@@ -38,6 +39,7 @@ function Graphs({ wallet }: GraphsPageProps) {
         } catch (err) {
             setError("An error occurred while fetching spending data");
         } finally {
+            await waitMs(250);
             setIsLoading(false);
         }
     }, [wallet.id, spendingDaterange]);
@@ -50,18 +52,28 @@ function Graphs({ wallet }: GraphsPageProps) {
     // Render chart based on spendingDaterange
     const renderChart = () => {
         if (isLoading) {
-            return <Typography>Loading...</Typography>;
+            return (
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    flexGrow={1} // Mengambil sisa ruang yang tersedia
+                    height="100%" // Memastikan Box mengambil seluruh tinggi
+                >
+                    <CircularProgress />
+                </Box>
+            );
         }
         if (error) {
             return <Typography color="error">{error}</Typography>;
         }
-    
+
         const chartData = {
             data: spendingData,
             label: "Expense",
             color: "#FF0000",
         };
-    
+
         switch (spendingDaterange) {
             case DateRange.WEEK:
                 return chartType === CartesianChartType.line ? (
@@ -89,7 +101,7 @@ function Graphs({ wallet }: GraphsPageProps) {
     return (
         <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
             <Card sx={{ height: 520, padding: "10px", boxShadow: "none", border: '1.5px solid #EAEAEA' }}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%' }}>
                     <Box>
                         <Typography variant="h6" fontWeight={700}>Spending Trend Chart</Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -118,7 +130,9 @@ function Graphs({ wallet }: GraphsPageProps) {
                             />
                         </Box>
                     </Box>
-                    {renderChart()}
+                    <Box flexGrow={1} display="flex" justifyContent="center" alignItems="center">
+                        {renderChart()}
+                    </Box>
                 </CardContent>
             </Card>
         </Box>

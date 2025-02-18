@@ -164,7 +164,7 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({ wallet, handleD
                                 <TableCell>Updated</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
-                        </TableHead>
+             ``           </TableHead>
                         <TableBody>
                             {(isSearching ? searchResults : transactions).map((transaction, index) => (
                                 <TableRow key={transaction.id}>
