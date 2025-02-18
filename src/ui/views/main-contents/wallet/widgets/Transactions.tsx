@@ -11,9 +11,11 @@ import { DeleteMenuItem, EditMenuItem, ViewMenuItem } from "../../../components/
 
 interface WalletTransactionsProps {
     wallet: WalletInterface | null;
+    handleDelete: (val: ExpenseInterface | IncomeInterface) => void;
+    handleEdit: (val: ExpenseInterface | IncomeInterface) => void;
 }
 
-const WalletTransactions: React.FC<WalletTransactionsProps> = ({ wallet }) => {
+const WalletTransactions: React.FC<WalletTransactionsProps> = ({ wallet, handleDelete, handleEdit }) => {
     const [transactions, setTransactions] = useState<Array<ExpenseInterface | IncomeInterface>>([]);
     const [searchResults, setSearchResults] = useState<Array<ExpenseInterface | IncomeInterface>>([]);
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -58,6 +60,7 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({ wallet }) => {
             performSearch();
         }
     };
+
 
     // Open menu for transaction actions
     const openMenu = (event: React.MouseEvent<HTMLElement>, transaction: ExpenseInterface | IncomeInterface) => {
@@ -198,8 +201,16 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({ wallet }) => {
             {/* Transaction Actions Menu */}
             <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
                 <ViewMenuItem onClick={() => { console.log("View", selectedTransaction); closeMenu(); }} />
-                <EditMenuItem onClick={() => { console.log("Edit", selectedTransaction); closeMenu(); }} />
-                <DeleteMenuItem onClick={() => { console.log("Delete", selectedTransaction); closeMenu(); }} />
+                <EditMenuItem onClick={() => {
+                    if (selectedTransaction !== null) {
+                        handleEdit(selectedTransaction)
+                    } closeMenu();
+                }} />
+                <DeleteMenuItem onClick={() => {
+                    if (selectedTransaction !== null) {
+                        handleDelete(selectedTransaction)
+                    } closeMenu();
+                }} />
             </Menu>
         </Card>
     );

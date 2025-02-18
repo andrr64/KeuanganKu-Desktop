@@ -7,12 +7,14 @@ import { waitMs } from '../../util';
 import { IncomeFormInterface } from '../../interfaces/request/income_form';
 import { IncomeCategoryInterface } from '../../interfaces/entities/income_category';
 import { WalletInterface } from '../../interfaces/entities/wallet';
+import { IncomeInterface } from '../../interfaces/entities/income';
 
 interface IncomeFormUIProps {
     whenIconCloseFire: () => void;
+    whenNewDataSaved?: (val: IncomeInterface) => void;
 }
 
-const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
+const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire, whenNewDataSaved }) => {
     const [loading, setLoading] = React.useState(false);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<IncomeFormInterface>({
@@ -58,6 +60,9 @@ const IncomeForm: React.FC<IncomeFormUIProps> = ({ whenIconCloseFire }) => {
             setLoading(false);
             if (response.success) {
                 showAlert("success", "Income added successfully");
+                if (whenNewDataSaved){
+                    whenNewDataSaved(response.data!);
+                }
             } else {
                 showAlert("error", response.message);
             }

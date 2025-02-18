@@ -12,6 +12,8 @@ import { useAlert } from "../../alert/AlertContext";
 import Loading from "../../components/Loading";
 import WalletTransactions from "./widgets/Transactions";
 import Graphs from "./widgets/Graphs";
+import { IncomeInterface } from "../../../interfaces/entities/income";
+import { EXPENSE_TYPE, ExpenseInterface } from "../../../interfaces/entities/expense";
 
 function WalletPage() {
   const [openIncomeForm, setOpenIncomeForm] = useState(false);
@@ -25,39 +27,72 @@ function WalletPage() {
 
   const totalBalance = wallets.reduce((sum, wallet) => sum + wallet.balance, 0);
 
+  // Fungsi untuk memperbarui wallets
+  const updateWallets = useCallback(async () => {
+    const response = await window.db_wallets.getWalletsBySort(sortWalletVal);
+    if (response.success) {
+      setWallets(response.data);
+      if (response.data.length > 0 && activeWalletIndex === null) {
+        setSelectedWalletIndex(0); // Set active wallet jika belum ada
+      }
+    }
+  }, [sortWalletVal, activeWalletIndex]);
+
+  // Fetch data awal
+  useEffect(() => {
+    updateWallets().then(() => setFetched(true));
+  }, [updateWallets]);
+
+  // Handle new wallet
   const handleNewWallet = useCallback((newWallet: WalletInterface) => {
-    setWallets(prev => [...prev, newWallet]);
-  }, []);
+    setWallets((prev) => [...prev, newWallet]);
+    setSelectedWalletIndex(wallets.length); // Set active wallet ke yang baru ditambahkan
+  }, [wallets.length]);
 
+  // Handle edit wallet
   const handleEdit = useCallback(async (_: WalletInterface) => {
-    // Implement edit functionality
-  }, []);
 
+  }, [showAlert]);
+
+  // Handle delete wallet
   const handleDelete = useCallback((wallet: WalletInterface) => {
     showQuestion('Delete Wallet', 'Are you sure you want to delete this wallet?', async () => {
       const response = await window.db_wallets.deleteWallet(wallet.id);
       if (response.success) {
-        setWallets(prevWallets => prevWallets.filter(w => w.id !== wallet.id));
+        setWallets((prev) => prev.filter((w) => w.id !== wallet.id));
+        if (wallets.length === 1) {
+          setSelectedWalletIndex(null); // Reset active wallet jika tidak ada wallet lagi
+        }
         showAlert('success', 'Wallet deleted successfully');
       } else {
         showAlert('error', response.message);
       }
     });
-  }, [showQuestion, showAlert]);
+  }, [showQuestion, showAlert, wallets.length]);
 
-  const fetchData = useCallback(async () => {
-    const response = await window.db_wallets.getWalletsBySort(sortWalletVal);
-    if (response.success) {
-      const walletsData = response.data;
-      setWallets(walletsData);
-      setSelectedWalletIndex(walletsData.length > 0 ? 0 : null);
-    }
-    setFetched(true);
-  }, [sortWalletVal]);
+  // Handle delete transaction
+  const handleDeleteTransactions = useCallback((tx: IncomeInterface | ExpenseInterface) => {
+    showQuestion('Delete Transaction', 'Are you sure you want to delete this transaction?', async () => {
+      if (tx.type === EXPENSE_TYPE) {
+        const response = await window.db_expenses.deleteExpense(tx.id);
+        if (response.success) {
+          showAlert('success', 'Expense deleted successfully');
+          updateWallets(); // Perbarui wallets setelah menghapus transaksi
+        }
+      } else {
+        const response = await window.db_incomes.deleteIncome(tx.id);
+        if (response.success) {
+          showAlert('success', 'Income deleted successfully');
+          updateWallets(); // Perbarui wallets setelah menghapus transaksi
+        }
+      }
+    });
+  }, [showQuestion, showAlert, updateWallets]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  // Handle edit transaction
+  const handleEditTransactions = useCallback((_: IncomeInterface | ExpenseInterface) => {
+    
+  }, []);
 
   if (!fetched) {
     return (
@@ -70,10 +105,14 @@ function WalletPage() {
   return (
     <>
       <ModalContainer open={openIncomeForm}>
-        <IncomeForm whenIconCloseFire={() => setOpenIncomeForm(false)} />
+        <IncomeForm whenNewDataSaved={(_) => {
+          updateWallets();
+        }} whenIconCloseFire={() => setOpenIncomeForm(false)} />
       </ModalContainer>
       <ModalContainer open={openExpenseForm}>
-        <ExpenseForm whenIconCloseFire={() => setOpenExpenseForm(false)} />
+        <ExpenseForm whenNewDataSaved={(_) => {
+          updateWallets();
+        }} whenIconCloseFire={() => setOpenExpenseForm(false)} />
       </ModalContainer>
       <ModalContainer open={openWalletForm}>
         <WalletForm handleNewWallet={handleNewWallet} whenIconCloseFire={() => setOpenWalletForm(false)} />
@@ -101,10 +140,13 @@ function WalletPage() {
           />
           <Divider sx={{ bgcolor: '#E8F2FF' }} orientation="vertical" flexItem />
           {activeWalletIndex !== null && (
-            // Summary
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <WalletTransactions wallet={wallets[activeWalletIndex]} />
-              <Graphs wallet={wallets[activeWalletIndex]}/>
+              <WalletTransactions
+                wallet={wallets[activeWalletIndex]}
+                handleDelete={handleDeleteTransactions}
+                handleEdit={handleEditTransactions}
+              />
+              <Graphs wallet={wallets[activeWalletIndex]} />
             </Box>
           )}
         </Box>

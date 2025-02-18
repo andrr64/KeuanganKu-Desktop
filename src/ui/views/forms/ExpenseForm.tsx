@@ -6,6 +6,7 @@ import LoadingModal from '../modals/LoadingModal';
 import { ExpenseCategoryInterface } from '../../interfaces/entities/expense_category';
 import { WalletInterface } from '../../interfaces/entities/wallet';
 import { waitMs } from '../../util';
+import { ExpenseInterface } from '../../interfaces/entities/expense';
 
 interface ExpenseFormInterface {
     title: string;
@@ -19,9 +20,10 @@ interface ExpenseFormInterface {
 
 interface ExpenseFormUIProps {
     whenIconCloseFire: () => void;
+    whenNewDataSaved?: (val: ExpenseInterface) => void;
 }
 
-const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
+const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire, whenNewDataSaved }) => {
     const [loading, setLoading] = React.useState(false);
     const { showAlert } = useAlert();
     const [formData, setFormData] = React.useState<ExpenseFormInterface>({
@@ -33,6 +35,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
         date: '',
         time: '', // Add this line
     });
+
     const [categories, setCategories] = React.useState<ExpenseCategoryInterface[]>([]);
     const [wallets, setWallets] = React.useState<WalletInterface[]>([]);
     const [fetched, setFetched] = React.useState(false);
@@ -70,6 +73,9 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
                 ///TODO: Combine date and time
             });
             if (response.success) {
+                if (whenNewDataSaved) {
+                    whenNewDataSaved(response.data!);
+                }
                 showAlert("success", "Expense added successfully");
             } else {
                 showAlert("error", response.message);
@@ -89,7 +95,6 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
         if (!response.success) {
             throw new Error(response.message);
         }
-        formData.category_id = response.data[0].id ?? 0;
         setCategories(response.data);
     };
 
@@ -98,19 +103,11 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
         if (!response.success) {
             throw new Error(response.message);
         }
-
-        formData.wallet_id = response.data[0].id ?? -1;
         setWallets(response.data);
     };
 
     const initData = async () => {
         try {
-            const now = new Date();
-            setFormData({
-                ...formData,
-                date: now.toISOString().split('T')[0],
-                time: now.toTimeString().split(' ')[0].slice(0, 5),
-            });
             await initWallets();
             await initCategories();
         } catch (error: any) {
@@ -124,8 +121,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
     useEffect(() => {
         initData();
     }, []);
-
-    if (!fetched){
+    if (!fetched) {
         return null;
     }
 
@@ -236,7 +232,7 @@ const ExpenseForm: React.FC<ExpenseFormUIProps> = ({ whenIconCloseFire }) => {
                     <Select
                         labelId="category-label"
                         name="category_id"
-                        value={formData.category_id}
+                        value={formData}
                         onChange={handleChange}
                         label="Category"
                     >
