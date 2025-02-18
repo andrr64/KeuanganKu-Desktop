@@ -5,6 +5,11 @@ import { useCallback, useEffect, useState } from "react";
 import LineChartWeek from "../../../components/LineChartWeek";
 import LineChartMonth from "../../../components/LineChartMonth";
 import LineChartYear from "../../../components/LineChartYear";
+
+import BarChartMonth from "../../../components/graphs/BarChartMonth";
+import BarChartWeek from "../../../components/graphs/BarChartWeek";
+import BarChartYear from "../../../components/graphs/BarChartYear";
+
 import { WalletInterface } from "../../../../interfaces/entities/wallet";
 import { CartesianChartType, CartesianChartTypeMenuItems } from "../../../../enums/chart_type";
 
@@ -50,20 +55,32 @@ function Graphs({ wallet }: GraphsPageProps) {
         if (error) {
             return <Typography color="error">{error}</Typography>;
         }
-
+    
         const chartData = {
             data: spendingData,
             label: "Expense",
             color: "#FF0000",
         };
-
+    
         switch (spendingDaterange) {
             case DateRange.WEEK:
-                return <LineChartWeek lines={[chartData]} />;
+                return chartType === CartesianChartType.line ? (
+                    <LineChartWeek lines={[chartData]} />
+                ) : (
+                    <BarChartWeek bars={[chartData]} />
+                );
             case DateRange.MONTH:
-                return <LineChartMonth lines={[chartData]} />;
+                return chartType === CartesianChartType.line ? (
+                    <LineChartMonth lines={[chartData]} />
+                ) : (
+                    <BarChartMonth bars={[chartData]} />
+                );
             case DateRange.YEAR:
-                return <LineChartYear lines={[chartData]} />;
+                return chartType === CartesianChartType.line ? (
+                    <LineChartYear lines={[chartData]} />
+                ) : (
+                    <BarChartYear bars={[chartData]} />
+                );
             default:
                 return <Typography>Invalid date range</Typography>;
         }
