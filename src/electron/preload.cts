@@ -48,6 +48,9 @@ electron.contextBridge.exposeInMainWorld(database.incomes, {
     },
     getLineGraph: (wallet_id: number, dateRange: any) => {
         return electron.ipcRenderer.invoke('get-income-line-graph', wallet_id, dateRange);
+    },
+    getPieGraph: (wallet_id: number, dataRange: any) => {
+        return electron.ipcRenderer.invoke('get-income-pie-graph', wallet_id, dataRange);
     }
 });
 
@@ -63,6 +66,9 @@ electron.contextBridge.exposeInMainWorld(database.expenses, {
     },
     getLineGraph: (wallet_id: number, dateRange: any) => {
         return electron.ipcRenderer.invoke('get-expense-line-graph', wallet_id, dateRange);
+    },
+    getPieGraph: (wallet_id: number, dataRange: any) => {
+        return electron.ipcRenderer.invoke('get-expense-pie-graph', wallet_id, dataRange);
     }
 });
 

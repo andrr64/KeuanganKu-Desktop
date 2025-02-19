@@ -183,4 +183,69 @@ export function registerDBIncomeIPCHandler() {
             return ipcResponseError(error.message || 'An unexpected error occurred');
         }
     });
+
+    ipcMain.handle('get-income-pie-graph', async (_, walletId: number, dateRange: DateRange) => {
+        try {
+            // Cari wallet berdasarkan ID
+            const wallet = await Wallet.findOne({ where: { id: walletId } });
+            if (!wallet) {
+                return ipcResponseError('Wallet not found');
+            }
+
+            // Tentukan rentang tanggal berdasarkan dateRange
+            const endDate = new Date();
+            let startDate: Date;
+
+            switch (dateRange) {
+                case DateRange.WEEK:
+                    startDate = new Date();
+                    startDate.setDate(endDate.getDate() - 7);
+                    break;
+                case DateRange.MONTH:
+                    startDate = new Date();
+                    startDate.setMonth(endDate.getMonth() - 1);
+                    break;
+                case DateRange.YEAR:
+                    startDate = new Date();
+                    startDate.setFullYear(endDate.getFullYear() - 1);
+                    break;
+                default:
+                    throw new Error('Invalid date range');
+            }
+
+            // Cari data income dalam rentang tanggal yang ditentukan
+            const incomes = await Income.find({
+                where: {
+                    wallet: { id: walletId },
+                    createdAt: Between(startDate, endDate),
+                },
+                relations: ['category'], // Pastikan relasi kategori dimuat
+            });
+
+            // Kelompokkan data berdasarkan kategori
+            const categoryMap = new Map<string, number>();
+
+            incomes.forEach((income) => {
+                const categoryName = income.category.name; // Ambil nama kategori
+                if (categoryMap.has(categoryName)) {
+                    categoryMap.set(categoryName, categoryMap.get(categoryName)! + income.amount);
+                } else {
+                    categoryMap.set(categoryName, income.amount);
+                }
+            });
+
+            // Format data untuk pie chart
+            const pieChartData = Array.from(categoryMap).map(([category, total]) => ({
+                category,
+                total,
+            }));
+
+            // Kirim respons sukses
+            return ipcResponseSuccess(pieChartData);
+        } catch (error: any) {
+            // Tangani error dan kirim respons error
+            console.error('Error in get-income-pie-graph:', error);
+            return ipcResponseError(error.message || 'An unexpected error occurred');
+        }
+    });
 }

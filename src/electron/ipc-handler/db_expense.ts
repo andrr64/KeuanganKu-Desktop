@@ -140,7 +140,7 @@ export function registerDBExpenseIPCHandler() {
             });
 
             // Format data untuk grafik berdasarkan dateRange
-            let graphData : {}[];
+            let graphData: {}[];
 
             switch (dateRange) {
                 case DateRange.WEEK:
@@ -183,6 +183,71 @@ export function registerDBExpenseIPCHandler() {
         } catch (error: any) {
             // Tangani error dan kirim respons error
             console.error('Error in get-income-line-graph:', error);
+            return ipcResponseError(error.message || 'An unexpected error occurred');
+        }
+    });
+
+    ipcMain.handle('get-expense-pie-graph', async (_, walletId: number, dateRange: DateRange) => {
+        try {
+            // Cari wallet berdasarkan ID
+            const wallet = await Wallet.findOne({ where: { id: walletId } });
+            if (!wallet) {
+                return ipcResponseError('Wallet not found');
+            }
+
+            // Tentukan rentang tanggal berdasarkan dateRange
+            const endDate = new Date();
+            let startDate: Date;
+
+            switch (dateRange) {
+                case DateRange.WEEK:
+                    startDate = new Date();
+                    startDate.setDate(endDate.getDate() - 7);
+                    break;
+                case DateRange.MONTH:
+                    startDate = new Date();
+                    startDate.setMonth(endDate.getMonth() - 1);
+                    break;
+                case DateRange.YEAR:
+                    startDate = new Date();
+                    startDate.setFullYear(endDate.getFullYear() - 1);
+                    break;
+                default:
+                    throw new Error('Invalid date range');
+            }
+
+            // Cari data pengeluaran dalam rentang tanggal yang ditentukan
+            const expenses = await Expense.find({
+                where: {
+                    wallet: { id: walletId },
+                    createdAt: Between(startDate, endDate),
+                },
+                relations: ['category'], // Pastikan relasi kategori dimuat
+            });
+
+            // Kelompokkan data berdasarkan kategori
+            const categoryMap = new Map<string, number>();
+
+            expenses.forEach((expense) => {
+                const categoryName = expense.category.name; // Ambil nama kategori
+                if (categoryMap.has(categoryName)) {
+                    categoryMap.set(categoryName, categoryMap.get(categoryName)! + expense.amount);
+                } else {
+                    categoryMap.set(categoryName, expense.amount);
+                }
+            });
+
+            // Format data untuk pie chart
+            const pieChartData = Array.from(categoryMap).map(([category, total]) => ({
+                category,
+                total,
+            }));
+
+            // Kirim respons sukses
+            return ipcResponseSuccess(pieChartData);
+        } catch (error: any) {
+            // Tangani error dan kirim respons error
+            console.error('Error in get-expense-pie-chart:', error);
             return ipcResponseError(error.message || 'An unexpected error occurred');
         }
     });
