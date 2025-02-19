@@ -3,12 +3,13 @@ import Income from '../db/entities/income.js';
 import Wallet from '../db/entities/wallet.js';
 import IncomeCategory from '../db/entities/income_category.js'; // Import IncomeCategory
 import { IncomeFormInterface } from "./interfaces/income_form.js";
-import { ipcResponseError, ipcResponseSuccess } from "../db/interfaces/ipc_response.js";
+import { IPCResponse, ipcResponseError, ipcResponseSuccess } from "../db/interfaces/ipc_response.js";
 import AppDataSource from "../db/config/ormconfig.js";
 import { GetIncomesProp } from "./interfaces/get_income.js";
 import { IncomeInterface } from "../db/interfaces/income.js";
 import { DateRange } from "../enums/date_range.js";
 import { Between } from "typeorm";
+import { PieData } from "./interfaces/graph.js";
 
 export function registerDBIncomeIPCHandler() {
     ipcMain.handle('add-income', async (_, data: IncomeFormInterface) => {
@@ -184,7 +185,7 @@ export function registerDBIncomeIPCHandler() {
         }
     });
 
-    ipcMain.handle('get-income-pie-graph', async (_, walletId: number, dateRange: DateRange) => {
+    ipcMain.handle('get-income-pie-graph', async (_, walletId: number, dateRange: DateRange): Promise<IPCResponse<PieData[] | null>> => {
         try {
             // Cari wallet berdasarkan ID
             const wallet = await Wallet.findOne({ where: { id: walletId } });
@@ -236,8 +237,8 @@ export function registerDBIncomeIPCHandler() {
 
             // Format data untuk pie chart
             const pieChartData = Array.from(categoryMap).map(([category, total]) => ({
-                category,
-                total,
+                label: category,
+                value: total,
             }));
 
             // Kirim respons sukses

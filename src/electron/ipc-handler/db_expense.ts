@@ -2,13 +2,14 @@ import { ipcMain } from "electron";
 import Expense from '../db/entities/expense.js';
 import Wallet from '../db/entities/wallet.js';
 import { ExpenseFormInterface } from "./interfaces/expense_form.js";
-import { ipcResponseError, ipcResponseSuccess } from "../db/interfaces/ipc_response.js";
+import { ipcResponseError, ipcResponseSuccess,  IPCResponse } from "../db/interfaces/ipc_response.js";
 import AppDataSource from "../db/config/ormconfig.js";
 import { GetExpensesProp } from "./interfaces/get_expense.js";
 import { ExpenseInterface } from "../db/interfaces/expense.js";
 import { ExpenseCategory } from "../db/entities/expense_category.js";
 import { DateRange } from "../enums/date_range.js";
 import { Between } from "typeorm";
+import { PieData } from "./interfaces/graph.js";
 
 export function registerDBExpenseIPCHandler() {
     ipcMain.handle('add-expense', async (_, data: ExpenseFormInterface) => {
@@ -187,7 +188,7 @@ export function registerDBExpenseIPCHandler() {
         }
     });
 
-    ipcMain.handle('get-expense-pie-graph', async (_, walletId: number, dateRange: DateRange) => {
+    ipcMain.handle('get-expense-pie-graph', async (_, walletId: number, dateRange: DateRange): Promise<IPCResponse<PieData[] | null>> => {
         try {
             // Cari wallet berdasarkan ID
             const wallet = await Wallet.findOne({ where: { id: walletId } });
@@ -239,10 +240,10 @@ export function registerDBExpenseIPCHandler() {
 
             // Format data untuk pie chart
             const pieChartData = Array.from(categoryMap).map(([category, total]) => ({
-                category,
-                total,
+                label: category,
+                value: total,
             }));
-
+            
             // Kirim respons sukses
             return ipcResponseSuccess(pieChartData);
         } catch (error: any) {

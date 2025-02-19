@@ -9,6 +9,8 @@ import { GetExpenseProp } from "./ui/interfaces/request/get_expense";
 import { GetIncomesProp } from "./ui/interfaces/request/get_income";
 import { IncomeFormInterface } from "./ui/interfaces/request/income_form";
 import { EnumSortWalletsBy } from "./ui/enums/sort_wallets";
+import { PieData } from "./ui/views/components/graphs/piechart/PieChart";
+import { DataPoint } from "./ui/views/components/LineChartWeek";
 
 declare global {
     interface Window {
@@ -20,7 +22,8 @@ declare global {
             getExpenses: (request: GetExpenseProp) => Promise<IPCResponse<ExpenseInterface[]>>;
             deleteExpense: (id: number) => Promise<IPCResponse<boolean>>;
 
-            getLineGraph: (wallet_id: number, dateRange: any) => Promise<any>;
+            getPieGraph: (wallet_id: number, dataRange: any) => Promise<IPCResponse<PieData[]>>;
+            getLineGraph: (wallet_id: number, dateRange: any) => Promise<IPCResponse<DataPoint[]>>;
         };
         db_income_categories: {
             getIncomeCategories: () => Promise<IPCResponse<IncomeCategoryInterface[]>>;
@@ -30,7 +33,8 @@ declare global {
             addIncome: (incomeData: IncomeFormInterface) => Promise<IPCResponse<IncomeInterface | null>>;
             deleteIncome: (id: number) => Promise<IPCResponse<boolean>>;
 
-            getLineGraph: (wallet_id: number, dateRange: any) => Promise<any>;
+            getPieGraph: (wallet_id: number, dataRange: any) => Promise<IPCResponse<PieData[]>>;
+            getLineGraph: (wallet_id: number, dateRange: any) => Promise<IPCResponse<DataPoint[]>>;
         };
         db_wallets: {
             addWallet: (title: string, balance?: number) => Promise<IPCResponse<WalletInterface | null>>;
@@ -40,7 +44,6 @@ declare global {
             getTotalBalances: () => Promise<IPCResponse<number | null>>;
             getTransactions: (walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>; 
             searchTransactions: (query: string ,walletId: number) => Promise<IPCResponse<(ExpenseInterface | IncomeInterface)[]>>;
-
             deleteWallet: (id: number) => Promise<IPCResponse<boolean>>;
         };
         app_sys: {

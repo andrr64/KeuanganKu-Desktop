@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { Typography } from '@mui/material';
 
 export interface DataPoint {
   x: number; // Index hari (0-6)
@@ -17,7 +18,13 @@ export interface LineChartWeekProps {
 }
 
 const LineChartWeek: React.FC<LineChartWeekProps> = ({ lines }) => {
-  // Fungsi untuk mengonversi index hari ke nama hari
+  if (lines.length === 0) {
+    return (
+      <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+        No data available
+      </Typography>
+    );
+  }// Fungsi untuk mengonversi index hari ke nama hari
   const formatXAxis = (dayIndex: number) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return days[dayIndex]; // Ambil nama hari berdasarkan index

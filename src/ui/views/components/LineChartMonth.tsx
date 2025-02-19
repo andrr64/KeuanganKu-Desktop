@@ -1,11 +1,20 @@
 import { LineChart } from "@mui/x-charts";
 import { LineData } from "./LineChartWeek";
+import { Typography } from "@mui/material";
 
 export interface LineChartMonthProps {
     lines: LineData[]; // Array dari LineData
 }
 
 const LineChartMonth: React.FC<LineChartMonthProps> = ({ lines }) => {
+
+    if (lines.length === 0) {
+        return (
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                No data available
+            </Typography>
+        );
+    }
     // Format data untuk MUI Charts
     const chartData = {
         series: lines.map((line) => ({
@@ -25,7 +34,7 @@ const LineChartMonth: React.FC<LineChartMonthProps> = ({ lines }) => {
         <LineChart
             series={chartData.series.map((series) => ({
                 ...series,
-                showMark: false, 
+                showMark: false,
             }))}
             xAxis={[
                 {

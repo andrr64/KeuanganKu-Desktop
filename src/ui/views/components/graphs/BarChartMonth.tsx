@@ -1,5 +1,6 @@
 import { BarChart } from "@mui/x-charts";
 import { LineData } from "../LineChartWeek";
+import { Typography } from "@mui/material";
 
 export interface BarChartProps {
     bars: LineData[]; // Array dari LineData
@@ -24,7 +25,13 @@ const BarChartMonth: React.FC<BarChartProps> = ({ bars }) => {
     const formatYAxis = (value: number) => {
         return `${(value / 1000).toFixed(0)}K`; // Contoh: 1000000 -> 1000K
     };
-
+    if (bars.length === 0) {
+        return (
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                No data available
+            </Typography>
+        );
+    }
     return (
         <BarChart
             series={chartData.series}

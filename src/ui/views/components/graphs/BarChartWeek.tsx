@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { DataPoint } from '../LineChartWeek';
+import { Typography } from '@mui/material';
 
 export interface BarData {
   data: DataPoint[]; // Array data points
@@ -13,7 +14,14 @@ export interface BarChartWeekProps {
 }
 
 const BarChartWeek: React.FC<BarChartWeekProps> = ({ bars }) => {
-  // Fungsi untuk mengonversi index hari ke nama hari
+  if (bars.length === 0) {
+    return (
+      <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+        No data available
+      </Typography>
+    );
+  } 
+  
   const formatXAxis = (dayIndex: number) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return days[dayIndex]; // Ambil nama hari berdasarkan index

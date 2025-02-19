@@ -1,11 +1,21 @@
 import { BarChart } from "@mui/x-charts";
 import { LineData } from "../LineChartWeek";
+import { Typography } from "@mui/material";
 
 export interface BarChartProps {
     bars: LineData[]; // Array dari LineData
 }
 
 const BarChartYear: React.FC<BarChartProps> = ({ bars }) => {
+
+    if (bars.length === 0) {
+        return (
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+                No data available
+            </Typography>
+        );
+    }
+
     // Fungsi untuk mengonversi index bulan ke nama bulan
     const formatXAxis = (monthIndex: number) => {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
